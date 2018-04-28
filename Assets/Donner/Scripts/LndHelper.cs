@@ -38,6 +38,10 @@ namespace Donner
 
         }
 
+        public static void SetupEnvironmentVariables() {
+                    Environment.SetEnvironmentVariable("GRPC_SSL_CIPHER_SUITES", "ECDHE-RSA-AES128-GCM-SHA256:ECDHE-RSA-AES128-SHA256:ECDHE-RSA-AES256-SHA384:ECDHE-RSA-AES256-GCM-SHA384:ECDHE-ECDSA-AES128-GCM-SHA256:ECDHE-ECDSA-AES128-SHA256:ECDHE-ECDSA-AES256-SHA384:ECDHE-ECDSA-AES256-GCM-SHA384");
+        }
+
         private static void LndProcess_OutputDataReceived(object sender, DataReceivedEventArgs e)
         {
             UnityEngine.Debug.Log(e.Data);

@@ -393,3 +393,5 @@ __pycache__/
 
 lnd_data/
 lnd_log/
+
+Assets/Resources/lnd/
