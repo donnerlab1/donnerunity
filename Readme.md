@@ -23,4 +23,4 @@ Not tested, could work out of the box.
 
 
 ## Troubleshooting
-- execute LndHelper.SetupEnvironmentVariables() in Start() if connection is not working
+- run LndHelper.SetupEnvironmentVariables() in Start() if connection is not working
