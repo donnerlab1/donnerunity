@@ -50,7 +50,7 @@ public class PublicLndInfo : NetworkBehaviour {
     [TargetRpc]
     public void Target_GetPaymentRequest(NetworkConnection self, NetworkIdentity payer, int amt, string memo)
     {
-        var task = rpcClient.rpc.CreateInvoice(amt, memo);
+        var task = rpcClient.rpc.AddInvoice(amt, memo);
         task.RunSynchronously();
         Cmd_PayUserSecondStep(payer, task.Result);
     }

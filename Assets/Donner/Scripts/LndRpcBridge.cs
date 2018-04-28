@@ -114,7 +114,12 @@ namespace Donner
             }
         }
 
-        public async Task<string> NewAdress()
+        public async Task<TransactionDetails> GetTransactions() {
+            var response = await lndClient.GetTransactionsAsync(new GetTransactionsRequest());
+            return response;
+        }
+
+        public async Task<string> NewWitnessAdress()
         {
             var response = await lndClient.NewWitnessAddressAsync(new NewWitnessAddressRequest());
             return response.Address;
@@ -201,7 +206,7 @@ namespace Donner
             return await lndClient.SendPaymentSyncAsync(request);
         }
 
-        public async Task<string> CreateInvoice(int amount, string memo ="")
+        public async Task<string> AddInvoice(int amount, string memo ="")
         {
             var request = new Invoice() { Value = amount, Memo = memo };
             var response = await lndClient.AddInvoiceAsync(request);
@@ -257,7 +262,7 @@ namespace Donner
             return await lndClient.DescribeGraphAsync(new ChannelGraphRequest());
         }
 
-        public async Task<ChannelEdge> GetChannelInfo(uint channelId)
+        public async Task<ChannelEdge> GetChanInfo(uint channelId)
         {
             return await lndClient.GetChanInfoAsync(new ChanInfoRequest() { ChanId = channelId });
         }

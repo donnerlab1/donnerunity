@@ -64,7 +64,7 @@ public class SimpleLndWallet : LndRpcBridge
 
     public async void OnGenerateAddress()
     {
-        var s = await NewAdress();
+        var s = await NewWitnessAdress();
         Debug.Log(s.ToString());
         addrOutput.text = s.ToString();
         
@@ -90,7 +90,7 @@ public class SimpleLndWallet : LndRpcBridge
     }
 
     public async void OnCreateInvoice() {
-        var s = await CreateInvoice(int.Parse(SatForInvoice.text), MemoForInvoice.text);
+        var s = await AddInvoice(int.Parse(SatForInvoice.text), MemoForInvoice.text);
         Debug.Log(s);
         InvoiceText.text = s;
     }

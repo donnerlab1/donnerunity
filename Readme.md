@@ -18,7 +18,7 @@ Not tested, could work out of the box.
 - make sure to run lnd with --no-macaroons flag set
 - copy your tls.cert file to /Assets/Resources
 - a small wallet example scene is located in Assets/Donner/Examples
-- currently all [`api`](http://api.lightning.community/) calls are implemented.
+- all lightning relevant [`api`](http://api.lightning.community/) calls are implemented.
 
 
 
