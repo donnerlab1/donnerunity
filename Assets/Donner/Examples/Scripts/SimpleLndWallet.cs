@@ -3,6 +3,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using System.IO;
 using Donner;
+using QRCoder;
 
 public class SimpleLndWallet : LndRpcBridge
 {
@@ -11,10 +12,12 @@ public class SimpleLndWallet : LndRpcBridge
     public string port;
     public string filename;
     string cert;
+    public int pixelPerUnit;
     public InputField pwInput;
     public Text balanceOutput;
     public Text chanBalanceOutput;
     public InputField addrOutput;
+    public Image addrImg;
 
     public InputField ChanPeerInput;
 
@@ -28,6 +31,15 @@ public class SimpleLndWallet : LndRpcBridge
 
     public InputField MemoForInvoice;
     public InputField InvPeerOutput;
+
+    public InputField getInfoPubkey;
+    public InputField synced;
+    public InputField pendingChannels;
+    public InputField activeChannels;
+    public InputField numPeers;
+    public InputField blockHeight;
+    public InputField blockHash;
+
 
 
 
@@ -66,6 +78,14 @@ public class SimpleLndWallet : LndRpcBridge
     {
         var s = await NewWitnessAdress();
         Debug.Log(s.ToString());
+        var payload = new PayloadGenerator.BitcoinAddress(s, 0, null, "pay Unity").ToString();
+        var qrCodeGenerator = new QRCodeGenerator();
+        var qrCodeData = qrCodeGenerator.CreateQrCode(payload, QRCodeGenerator.ECCLevel.Q);
+        var qrCode = new UnityQRCode(qrCodeData).GetGraphic(pixelPerUnit);
+        var addrSprite = Sprite.Create(qrCode, new Rect(0, 0, qrCode.width, qrCode.height), Vector2.zero, pixelPerUnit, 0,SpriteMeshType.FullRect, new Vector4(0,1,0,1));
+
+        addrImg.sprite = addrSprite;
+        addrImg.preserveAspect = true;
         addrOutput.text = s.ToString();
         
     }
@@ -73,16 +93,14 @@ public class SimpleLndWallet : LndRpcBridge
     public void OnConnectPeer()
     {
         var peer = ChanPeerInput.text.Split('@');
-        foreach(var s in peer)
-            Debug.Log(s);
-                ConnectPeer(peer[0],peer[1]);
+        ConnectPeer(peer[0],peer[1]);
     }
 
     public async void OnOpenChannel() {
         var peer = ChanPeerInput.text.Split('@');
         var s = await OpenChannel(peer[0], int.Parse(SatforChannelInput.text));
         TxOutput.text = s;
-                Debug.Log(s.ToString());
+                Debug.Log(s);
 
     }
 
@@ -104,6 +122,18 @@ public class SimpleLndWallet : LndRpcBridge
         MemoForInvoice.text = s.Description;
     }
 
+    public async void OnGetInfo()
+    {
+        var s = await GetInfo();
+        getInfoPubkey.text = s.IdentityPubkey;
+        synced.text = "synced to chain: "+ s.SyncedToChain.ToString();
+        pendingChannels.text = "pending channels: " + s.NumPendingChannels.ToString();
+        activeChannels.text = "active channels: "+s.NumActiveChannels.ToString();
+        numPeers.text = "peers: "+s.NumPeers.ToString();
+        blockHeight.text = "blockheight: "+s.BlockHeight.ToString();
+        blockHash.text = "blockhash: "+ s.BlockHash.ToString();
+
+    }
     
     void OnApplicationQuit()
     {

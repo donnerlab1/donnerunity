@@ -186,7 +186,8 @@ namespace Donner
 
         public async Task<string> OpenChannel(string pubkey, int fundingAmount, int pushAmount = 0, int targetConf = 1)
         {
-            var request = new OpenChannelRequest() { NodePubkey = ByteString.CopyFromUtf8(pubkey), LocalFundingAmount = fundingAmount, PushSat = pushAmount, TargetConf = targetConf };
+
+            var request = new OpenChannelRequest() { NodePubkeyString = pubkey, LocalFundingAmount = fundingAmount, PushSat = pushAmount, TargetConf = targetConf };
             var response = await lndClient.OpenChannelSyncAsync(request);
             return response.FundingTxidStr;
         }
