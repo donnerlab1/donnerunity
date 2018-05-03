@@ -1,6 +1,6 @@
 # Donner
 
-Donner is a Lightning pluding for Unity. It uses grpc to communicate with a local [`lnd`](https://github.com/lightningnetwork/lnd) node.
+Donner is a Lightning plugin for Unity. It uses grpc to communicate with a local [`lnd`](https://github.com/lightningnetwork/lnd) node.
 
 ## Install
 
