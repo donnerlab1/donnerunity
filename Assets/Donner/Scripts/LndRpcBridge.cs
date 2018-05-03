@@ -27,14 +27,17 @@ namespace Donner
         WalletUnlocker.WalletUnlockerClient walletUnlocker;
 
         
-        public async void ConnectToLnd(string host, string cert)
+        public async Task<string> ConnectToLnd(string host, string cert)
         {
             var channelCreds = new SslCredentials(cert);
             
             rpcChannel = new Grpc.Core.Channel(host, channelCreds);
             walletUnlocker = new WalletUnlocker.WalletUnlockerClient(rpcChannel);
+            
             lndClient = new Lightning.LightningClient(rpcChannel);
+
             await rpcChannel.ConnectAsync();
+            return "connected";
         }
 
 
@@ -49,7 +52,7 @@ namespace Donner
         }
 
 
-        public async void UnlockWallet(string walletPassword, string[] mnemonic)
+        public async Task<string> UnlockWallet(string walletPassword, string[] mnemonic)
         {
 
             var initWalletRequest = new InitWalletRequest();
@@ -58,14 +61,18 @@ namespace Donner
             try
             {
                 var initWalletResponse = await walletUnlocker.InitWalletAsync(initWalletRequest);
+                return "unlocked";
             } catch(RpcException e)
             {
                 if(e.Status.Detail == "wallet already exists")
                 {
                     var unlockWalletRequest = new UnlockWalletRequest() {WalletPassword = ByteString.CopyFromUtf8(walletPassword) };
                     var unlockWalletResponse = await walletUnlocker.UnlockWalletAsync(unlockWalletRequest);
+                    return "unlocked";
                 }
+                Debug.Log(e);
             }
+            return "not unlocked";
         }
 
 
@@ -358,7 +365,6 @@ namespace Donner
 
         public void Shutdown()
         {
-
             rpcChannel.ShutdownAsync().Wait();
         }
     }

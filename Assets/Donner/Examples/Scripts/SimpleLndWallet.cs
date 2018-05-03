@@ -9,7 +9,8 @@ public class SimpleLndWallet : LndRpcBridge
 
     public string hostname;
     public string port;
-
+    public string filename;
+    string cert;
     public InputField pwInput;
     public Text balanceOutput;
     public Text chanBalanceOutput;
@@ -32,20 +33,19 @@ public class SimpleLndWallet : LndRpcBridge
 
 
     // Use this for initialization
-    void Start()
+    async void Start()
     {
-        //LndHelper.StartLnd(Application.dataPath+"/Resources/lnd/lnd.exe", port);
-
-        var r = File.ReadAllText(Application.dataPath + "/Resources/tls.cert");
-        Debug.Log(r);
-        ConnectToLnd(hostname + ":" + port, r);
-
+        LndHelper.SetupEnvironmentVariables();
+        cert = File.ReadAllText(Application.dataPath + "/Resources/"+filename+".cert");
+        Debug.Log(cert);
+        await ConnectToLnd(hostname + ":" + port, cert);
     }
 
     public async void OnUnlockWallet()
     {
-        UnlockWallet(pwInput.text, null);
-        Debug.Log("unlocked Wallet");
+        await ConnectToLnd(hostname + ":" + port, cert);
+        var s = await UnlockWallet(pwInput.text, new string[]{""});
+        Debug.Log(s);
     }
 
     public async void OnGetBalance()
@@ -70,10 +70,12 @@ public class SimpleLndWallet : LndRpcBridge
         
     }
 
-    public async void OnConnectPeer()
+    public void OnConnectPeer()
     {
         var peer = ChanPeerInput.text.Split('@');
-        ConnectPeer(peer[0],peer[1]);
+        foreach(var s in peer)
+            Debug.Log(s);
+                ConnectPeer(peer[0],peer[1]);
     }
 
     public async void OnOpenChannel() {
@@ -106,7 +108,6 @@ public class SimpleLndWallet : LndRpcBridge
     void OnApplicationQuit()
     {
         Shutdown();
-        //LndHelper.KillLnd();
     }
 
 
