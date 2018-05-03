@@ -17,33 +17,38 @@ namespace Donner
         public InvoiceSettledEventHandler OnInvoiceSettled;
         public GraphTopologyUpdateEventHandler OnGraphTopologyUpdated;
 
-
+        string Cert;
+        string HostName;
         public LndRpcBridge() {
 
         }
 
         Grpc.Core.Channel rpcChannel;
+        Grpc.Core.Channel walletRpcChannel;
         Lightning.LightningClient lndClient;
         WalletUnlocker.WalletUnlockerClient walletUnlocker;
 
         
         public async Task<string> ConnectToLnd(string host, string cert)
         {
-            var channelCreds = new SslCredentials(cert);
             
+            HostName = host;
+            Cert = cert;
+            var channelCreds = new SslCredentials(cert);
             rpcChannel = new Grpc.Core.Channel(host, channelCreds);
-            walletUnlocker = new WalletUnlocker.WalletUnlockerClient(rpcChannel);
             
             lndClient = new Lightning.LightningClient(rpcChannel);
 
-            await rpcChannel.ConnectAsync();
+            InvokeRepeating("TryConnecting", 3, 5);
             return "connected";
         }
 
 
         public async Task<string[]> GenerateSeed(string aezeedPassphrase = default(string))
         {
-
+            walletRpcChannel = new Grpc.Core.Channel(HostName, new SslCredentials(Cert));
+            walletUnlocker = new WalletUnlocker.WalletUnlockerClient(walletRpcChannel);
+            await walletRpcChannel.ConnectAsync();
             var genSeedRequest = new GenSeedRequest();
             if (!string.IsNullOrEmpty(aezeedPassphrase))
                 genSeedRequest.AezeedPassphrase = ByteString.CopyFromUtf8(aezeedPassphrase);
@@ -54,6 +59,9 @@ namespace Donner
 
         public async Task<string> UnlockWallet(string walletPassword, string[] mnemonic)
         {
+            walletRpcChannel = new Grpc.Core.Channel(HostName, new SslCredentials(Cert));
+            walletUnlocker = new WalletUnlocker.WalletUnlockerClient(walletRpcChannel);
+            await walletRpcChannel.ConnectAsync();
 
             var initWalletRequest = new InitWalletRequest();
             initWalletRequest.WalletPassword = ByteString.CopyFromUtf8(walletPassword);
@@ -61,6 +69,10 @@ namespace Donner
             try
             {
                 var initWalletResponse = await walletUnlocker.InitWalletAsync(initWalletRequest);
+                walletRpcChannel.ShutdownAsync().Wait();
+                
+                await rpcChannel.ConnectAsync();
+                //InvokeRepeating("TryConnecting", 3, 5);
                 return "unlocked";
             } catch(RpcException e)
             {
@@ -68,13 +80,28 @@ namespace Donner
                 {
                     var unlockWalletRequest = new UnlockWalletRequest() {WalletPassword = ByteString.CopyFromUtf8(walletPassword) };
                     var unlockWalletResponse = await walletUnlocker.UnlockWalletAsync(unlockWalletRequest);
+                    walletRpcChannel.ShutdownAsync().Wait();
+
+                    //InvokeRepeating("TryConnecting", 3, 5);
                     return "unlocked";
                 }
                 Debug.Log(e);
             }
+            walletRpcChannel.ShutdownAsync().Wait();
+            //InvokeRepeating("TryConnecting", 3, 5);
             return "not unlocked";
         }
 
+        async void TryConnecting()
+        {
+            Debug.Log(rpcChannel.State);
+            if(rpcChannel.State == ChannelState.Ready)
+            {
+                CancelInvoke("TryConnecting");
+                return;
+            }
+            await rpcChannel.ConnectAsync();
+        }
 
         public async Task<long> WalletBalance()
         {
