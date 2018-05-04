@@ -4,6 +4,7 @@ using UnityEngine.UI;
 using System.IO;
 using Donner;
 using QRCoder;
+using System;
 
 public class SimpleLndWallet : LndRpcBridge
 {
@@ -12,6 +13,7 @@ public class SimpleLndWallet : LndRpcBridge
     public string port;
     public string filename;
     string cert;
+    string mac;
     public int pixelPerUnit;
     public InputField pwInput;
     public Text balanceOutput;
@@ -49,8 +51,10 @@ public class SimpleLndWallet : LndRpcBridge
     {
         LndHelper.SetupEnvironmentVariables();
         cert = File.ReadAllText(Application.dataPath + "/Resources/"+filename+".cert");
-        Debug.Log(cert);
-        await ConnectToLnd(hostname + ":" + port, cert);
+        
+        mac = LndHelper.ToHex(File.ReadAllBytes(Application.dataPath + "/Resources/admin.macaroon")); 
+
+        await ConnectToLndWithMacaroon(hostname + ":" + port, cert,mac);
     }
 
     public async void OnUnlockWallet()

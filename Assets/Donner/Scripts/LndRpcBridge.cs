@@ -8,6 +8,7 @@ using Grpc.Core;
 using UnityEngine;
 using Lnrpc;
 using Google.Protobuf;
+using Grpc.Core.Internal;
 
 namespace Donner
 {
@@ -36,9 +37,21 @@ namespace Donner
             Cert = cert;
             var channelCreds = new SslCredentials(cert);
             rpcChannel = new Grpc.Core.Channel(host, channelCreds);
-            
+        
             lndClient = new Lightning.LightningClient(rpcChannel);
+            InvokeRepeating("TryConnecting", 3, 5);
+            return "connected";
+        }
+        public async Task<string> ConnectToLndWithMacaroon(string host, string cert, string macaroon)
+        {
 
+            HostName = host;
+            Cert = cert;
+            var macaroonCallCredentials = new MacaroonCallCredentials(macaroon);
+            var sslCreds = new SslCredentials(cert);
+            var channelCreds = ChannelCredentials.Create(sslCreds, macaroonCallCredentials.credentials);
+            rpcChannel = new Grpc.Core.Channel(host, channelCreds);
+            lndClient = new Lightning.LightningClient(rpcChannel);
             InvokeRepeating("TryConnecting", 3, 5);
             return "connected";
         }
@@ -418,4 +431,8 @@ namespace Donner
     {
         public GraphTopologyUpdate GraphTopologyUpdate;
     }
+
+    
+
+    
 }

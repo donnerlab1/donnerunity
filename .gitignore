@@ -394,5 +394,8 @@ __pycache__/
 lnd_data/
 lnd_log/
 
+Assets/Resources/admin.macaroon
+Assets/Resources/readonly.macaroon
+Assets/Resources/tls.cert
 Assets/Resources/lnd/
 Assets/testing/
