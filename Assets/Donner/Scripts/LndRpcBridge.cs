@@ -71,8 +71,7 @@ namespace Donner
                 var initWalletResponse = await walletUnlocker.InitWalletAsync(initWalletRequest);
                 walletRpcChannel.ShutdownAsync().Wait();
                 
-                await rpcChannel.ConnectAsync();
-                //InvokeRepeating("TryConnecting", 3, 5);
+
                 return "unlocked";
             } catch(RpcException e)
             {
@@ -82,13 +81,13 @@ namespace Donner
                     var unlockWalletResponse = await walletUnlocker.UnlockWalletAsync(unlockWalletRequest);
                     walletRpcChannel.ShutdownAsync().Wait();
 
-                    //InvokeRepeating("TryConnecting", 3, 5);
+ 
                     return "unlocked";
                 }
                 Debug.Log(e);
             }
             walletRpcChannel.ShutdownAsync().Wait();
-            //InvokeRepeating("TryConnecting", 3, 5);
+
             return "not unlocked";
         }
 
