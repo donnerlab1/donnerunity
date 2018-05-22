@@ -19,11 +19,15 @@ public class PublicLndInfo : NetworkBehaviour {
 
     LndRpcClient rpcClient;
 
-	// Use this for initialization
-	void Start () {
+    public override void OnStartLocalPlayer()
+    {
+        GetComponent<LndPlayer>().Connect();
+    }
+    // Use this for initialization
+    void Start () {
         if (!isLocalPlayer)
         {
-            Destroy(GetComponent<LndRpcClient>());
+            Destroy(GetComponent<LndRpcBridge>());
             return;
         }
         Setup();

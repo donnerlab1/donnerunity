@@ -53,13 +53,13 @@ public class SimpleLndWallet : LndRpcBridge
         cert = File.ReadAllText(Application.dataPath + "/Resources/"+filename+".cert");
         
         mac = LndHelper.ToHex(File.ReadAllBytes(Application.dataPath + "/Resources/admin.macaroon")); 
-
+        
         await ConnectToLndWithMacaroon(hostname + ":" + port, cert,mac);
     }
 
     public async void OnUnlockWallet()
     {
-        await ConnectToLnd(hostname + ":" + port, cert);
+        await ConnectToLndWithMacaroon(hostname + ":" + port, cert, mac);
         var s = await UnlockWallet(pwInput.text, new string[]{""});
         Debug.Log(s);
     }

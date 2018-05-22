@@ -15,8 +15,7 @@ Copy the files in /Assets/Scripts/runtimes/osx/native to /usr/local/lib/
 Not tested, could work out of the box.
 
 ## Usage
-- make sure to run lnd with --no-macaroons flag set
-- copy your tls.cert file to /Assets/Resources
+- copy your tls.cert and admin.macaroon files to /Assets/Resources
 - a small wallet example scene is located in Assets/Donner/Examples
 - all lightning relevant [`api`](http://api.lightning.community/) calls are implemented.
 

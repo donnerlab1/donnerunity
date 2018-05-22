@@ -50,9 +50,11 @@ namespace Donner
             var macaroonCallCredentials = new MacaroonCallCredentials(macaroon);
             var sslCreds = new SslCredentials(cert);
             var channelCreds = ChannelCredentials.Create(sslCreds, macaroonCallCredentials.credentials);
+
             rpcChannel = new Grpc.Core.Channel(host, channelCreds);
             lndClient = new Lightning.LightningClient(rpcChannel);
             InvokeRepeating("TryConnecting", 3, 5);
+
             return "connected";
         }
 
@@ -250,6 +252,11 @@ namespace Donner
         public async Task<SendResponse> SendPayment(string paymentRequest)
         {
             var request = new SendRequest() { PaymentRequest = paymentRequest };
+            return await lndClient.SendPaymentSyncAsync(request);
+        }
+        public async Task<SendResponse> SendPayment(string paymentRequest, int sat)
+        {
+            var request = new SendRequest() { PaymentRequest = paymentRequest, Amt= sat};
             return await lndClient.SendPaymentSyncAsync(request);
         }
 
