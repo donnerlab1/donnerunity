@@ -11,7 +11,6 @@ public class SimpleLndWallet : LndRpcBridge
 
     public string hostname;
     public string port;
-    public string filename;
     string cert;
     string mac;
     public int pixelPerUnit;
@@ -50,10 +49,11 @@ public class SimpleLndWallet : LndRpcBridge
     async void Start()
     {
         LndHelper.SetupEnvironmentVariables();
-        cert = File.ReadAllText(Application.dataPath + "/Resources/"+filename+".cert");
+        cert = File.ReadAllText(Application.dataPath + "/Resources/tls.cert");
         
-        mac = LndHelper.ToHex(File.ReadAllBytes(Application.dataPath + "/Resources/admin.macaroon")); 
-        
+        mac = LndHelper.ToHex(File.ReadAllBytes(Application.dataPath + "/Resources/admin.macaroon"));
+
+        //await ConnectToLnd(hostname + ":" + port, cert);
         await ConnectToLndWithMacaroon(hostname + ":" + port, cert,mac);
     }
 

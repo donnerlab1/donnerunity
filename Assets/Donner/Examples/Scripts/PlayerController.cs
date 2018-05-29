@@ -62,13 +62,16 @@ public class PlayerController : NetworkBehaviour
 
 
         var preimage = await lnd.SendPayment(payment, amount);
-
+        
         if (preimage.PaymentError == "")
         {
 
             bounty += amount;
            
             CmdFire();
+        } else
+        {
+            Debug.Log(preimage.PaymentError);
         }
     }
     
@@ -83,7 +86,6 @@ public class PlayerController : NetworkBehaviour
         using (WWW www = new WWW("http://donnerlab.com/get_invoice/"))
         {
             yield return www;
-            Debug.Log(www.text);
             payment = www.text;
             SendPayment(payment,1);
             

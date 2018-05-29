@@ -9,6 +9,8 @@ using UnityEngine;
 using Lnrpc;
 using Google.Protobuf;
 using Grpc.Core.Internal;
+using System;
+using System.Threading;
 
 namespace Donner
 {
@@ -29,9 +31,14 @@ namespace Donner
         Lightning.LightningClient lndClient;
         WalletUnlocker.WalletUnlockerClient walletUnlocker;
 
-        
+        AsyncServerStreamingCall<Transaction> _transactionStream;
+        AsyncServerStreamingCall<Invoice> _invoiceStream;
+        AsyncServerStreamingCall<GraphTopologyUpdate> _graphStream;
+
+
         public async Task<string> ConnectToLnd(string host, string cert)
         {
+            Debug.Log("connecting to lnd");
             
             HostName = host;
             Cert = cert;
@@ -44,7 +51,7 @@ namespace Donner
         }
         public async Task<string> ConnectToLndWithMacaroon(string host, string cert, string macaroon)
         {
-
+            Debug.Log("connecting to lnd");
             HostName = host;
             Cert = cert;
             var macaroonCallCredentials = new MacaroonCallCredentials(macaroon);
@@ -146,19 +153,26 @@ namespace Donner
 
         public async void SubscribeTransactions()
         {
+
             var request = new GetTransactionsRequest();
 
-            using (var stream = lndClient.SubscribeTransactions(request))
+            try
             {
-                while(true)
+                using (_transactionStream = lndClient.SubscribeTransactions(request))
                 {
-                    while(await stream.ResponseStream.MoveNext())
+
+                    while (await _transactionStream.ResponseStream.MoveNext())
                     {
                         var e = new NewTransactionEventArgs();
-                        e.Transaction = stream.ResponseStream.Current;
+                        e.Transaction = _transactionStream.ResponseStream.Current;
                         OnNewTransaction(this, e);
+
                     }
+
                 }
+            }catch (Exception e)
+            {
+                Debug.Log(e);
             }
         }
 
@@ -273,25 +287,33 @@ namespace Donner
             return response.Invoices.ToArray();
         }
 
+
         public async void SubscribeInvoices()
         {
+            
             var request = new InvoiceSubscription();
-
-            using (var stream = lndClient.SubscribeInvoices(request))
+            try
             {
-                while (true)
+                using (_invoiceStream = lndClient.SubscribeInvoices(request))
                 {
-                    while (await stream.ResponseStream.MoveNext())
+
+                    while (await _invoiceStream.ResponseStream.MoveNext())
                     {
-                        var invoice = stream.ResponseStream.Current;
+                        var invoice = _invoiceStream.ResponseStream.Current;
                         if (invoice.Settled)
                         {
                             var e = new InvoiceSettledEventArgs();
                             e.Invoice = invoice;
                             OnInvoiceSettled(this, e);
                         }
+
                     }
+
+
                 }
+            } catch(Exception e)
+            {
+                Debug.Log(e);
             }
         }
 
@@ -348,21 +370,29 @@ namespace Donner
             await lndClient.StopDaemonAsync(new StopRequest());
         }
 
+
+        
         public async void SubscribeChannelGraph()
         {
+            
             var request = new GraphTopologySubscription();
-
-            using (var stream = lndClient.SubscribeChannelGraph(request))
+            try
             {
-                while (true)
+                using (_graphStream = lndClient.SubscribeChannelGraph(request))
                 {
-                    while (await stream.ResponseStream.MoveNext())
+
+                    while (await _graphStream.ResponseStream.MoveNext())
                     {
                         var e = new GraphTopologyUpdateEventArgs();
-                        e.GraphTopologyUpdate = stream.ResponseStream.Current;
+                        e.GraphTopologyUpdate = _graphStream.ResponseStream.Current;
                         OnGraphTopologyUpdated(this, e);
                     }
+
+
                 }
+            } catch(Exception e)
+            {
+                Debug.Log(e);
             }
         }
 
@@ -412,7 +442,22 @@ namespace Donner
 
         public void Shutdown()
         {
+            
+            if (_invoiceStream != null)
+                _invoiceStream.Dispose();
+            if (_graphStream != null)
+                _graphStream.Dispose();
+            if (_transactionStream != null)
+                _transactionStream.Dispose();
             rpcChannel.ShutdownAsync().Wait();
+
+
+        }
+
+        private void OnApplicationQuit()
+        {
+            Debug.Log("shutting down lnd interface");
+            Shutdown();
         }
     }
 
