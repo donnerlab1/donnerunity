@@ -16,6 +16,8 @@ public class WeatherLndClient : LndRpcBridge {
     public WindZone windZone;
     public GameObject Sphere;
 
+    
+
     // Use this for initialization
     async void Start () {
         cert = File.ReadAllText(Application.dataPath + "/Resources/tls.cert");
@@ -64,20 +66,20 @@ public class WeatherLndClient : LndRpcBridge {
 		
 	}
 
-    public string GetWeatherInvoice(string weatherType, int satAmount)
+    public async Task<string> GetWeatherInvoice(string weatherType, int satAmount)
     {
         var s = "";
         switch (weatherType)
         {
              
             case ("rain"):
-                 s = AddInvoice(5, "rain").GetAwaiter().GetResult();
+                s = await AddInvoice(5, "rain");
                 break;
             case ("fire"):
-                s = AddInvoice(10, "fire").GetAwaiter().GetResult();
+                s = await AddInvoice(10, "fire");
                 break;
             case ("wind"):
-                s = AddInvoice(satAmount, "wind").GetAwaiter().GetResult();
+                s = await AddInvoice(satAmount, "wind");
                 break;
             default:
                 s = "error in request";

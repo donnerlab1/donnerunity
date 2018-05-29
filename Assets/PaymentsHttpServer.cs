@@ -13,7 +13,7 @@ public class PaymentsHttpServer : MonoBehaviour {
 
     // Use this for initialization
     void Start () {
-        ws = new WebServer(SendResponse, "http://localhost:8080/weather/");
+        ws = new WebServer(SendResponse, "http://*:8081/weather/");
         ws.Run();
         
 	}
@@ -36,20 +36,22 @@ public class PaymentsHttpServer : MonoBehaviour {
         if (request.QueryString[0] == "rain")
         {
             Debug.Log("get rain request");
-            response = weatherClient.GetWeatherInvoice("rain", 5);
+            response = weatherClient.GetWeatherInvoice("rain", 5).GetAwaiter().GetResult();
             response = "<HTML><script type='text/javascript' src='https://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js'></script><script type='text/javascript' src='https://cdn.rawgit.com/jeromeetienne/jquery-qrcode/master/jquery.qrcode.min.js'></script><BODY><div id = 'qrcode' ><br>" + response+ "</div ></BODY><script>$(document).ready(function () {jQuery('#qrcode').qrcode('" + response + "');});</script></HTML>";
             
         }
         else if (request.QueryString[0] == "fire")
         {
             Debug.Log("get fire request");
-            response = weatherClient.GetWeatherInvoice("fire", 10);
+            response = weatherClient.GetWeatherInvoice("fire", 10).GetAwaiter().GetResult();
+            response = "<HTML><script type='text/javascript' src='https://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js'></script><script type='text/javascript' src='https://cdn.rawgit.com/jeromeetienne/jquery-qrcode/master/jquery.qrcode.min.js'></script><BODY><div id = 'qrcode' ><br>" + response + "</div ></BODY><script>$(document).ready(function () {jQuery('#qrcode').qrcode('" + response + "');});</script></HTML>";
         }
         else if (request.QueryString.AllKeys.Contains("wind"))
         {
             Debug.Log("get wind request");
             Debug.Log(request.QueryString[0]);
-            response = weatherClient.GetWeatherInvoice("wind", int.Parse(request.QueryString[0]));
+            response = weatherClient.GetWeatherInvoice("wind", int.Parse(request.QueryString[0])).GetAwaiter().GetResult();
+            response = "<HTML><script type='text/javascript' src='https://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js'></script><script type='text/javascript' src='https://cdn.rawgit.com/jeromeetienne/jquery-qrcode/master/jquery.qrcode.min.js'></script><BODY><div id = 'qrcode' ><br>" + response + "</div ></BODY><script>$(document).ready(function () {jQuery('#qrcode').qrcode('" + response + "');});</script></HTML>";
         }
        
         return response;
@@ -121,64 +123,4 @@ public class WebServer
 
 
     }
-    /*
-    public WebServer(Func<HttpListenerRequest, string> method, int port)
-    {
-        this.Initialize(port);
-    }
-    private void Initialize(int port)
-    {
-
-        this._port = port;
-        _serverThread = new Thread(this.Listen);
-        _serverThread.Start();
-    }
-
-    private void Listen()
-    {
-        _listener = new HttpListener();
-        _listener.Prefixes.Add("http://*:" + _port.ToString() + "/weather/");
-        _listener.Start();
-        while (true)
-        {
-            try
-            {
-                HttpListenerContext context = _listener.GetContext();
-                Debug.Log("connection" + context.Request.RawUrl.ToString());
-                Process(context);
-            }
-            catch (Exception ex)
-            {
-
-            }
-        }
-    }
-    private void Process(HttpListenerContext ctx)
-    {
-        try
-        {
-            string rstr = responderMethod(ctx.Request);
-            byte[] buf = Encoding.UTF8.GetBytes(rstr);
-            ctx.Response.ContentLength64 = buf.Length;
-            ctx.Response.OutputStream.Write(buf, 0, buf.Length);
-        }
-        catch { } // suppress any exceptions
-        finally
-        {
-            // always close the stream
-            ctx.Response.OutputStream.Close();
-        }
-    }
-
-    public void Stop()
-    {
-        Debug.Log("stopping");
-        _serverThread.Abort();
-        _listener.Stop();
-    }*/
-
-
-
-
-
 }
