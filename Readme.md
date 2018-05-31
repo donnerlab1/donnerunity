@@ -25,9 +25,10 @@ Not tested, could work out of the box.
 - lnd wallet made with unity
 - point the Simple Lnd Wallet Scripts of Donner Gameobject to your local or remote lnd node (hostname and port). and copy you tls.cert and admin.macaroon inside you Resources folder
 
-#HttpServerPayments
+#WeatherChange
 - creates a http webserver that creates invoices. if the invoices are settled the weather changes
-- goto localhost:8080/weather? to see instruction
+- goto localhost:8081/weather? to see instruction
+- optional twitch chat support enter your Twitch Oauth key, nickname and channelname in the inspector of TwitchIRC
 
 #NetworkPaymentsLnd
 - buggy atm

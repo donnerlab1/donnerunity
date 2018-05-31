@@ -30,44 +30,49 @@ public class TwitchLnd : MonoBehaviour
         Debug.Log(msg);
         Debug.Log(msgString);
         var response = "";
-        if(msgString == "!help")
+        if (msgString == "!help")
         {
-            IRC.SendMsg("type !rain, !fire or !rain=X (x is integer amount)");
+            response = "type !rain, !fire or !wind=X (x is integer amount)";
         }
-       else if (msgString == "!rain")
+        else if (msgString == "!rain")
         {
-           response = await weatherClient.GetWeatherInvoice("rain", 5);
-           IRC.SendMsg("let it rain: " + response);
+           response = response + await weatherClient.GetWeatherInvoice("rain", 5);
         } else if(msgString == "!fire")
         {
             response = await weatherClient.GetWeatherInvoice("fire", 10);
-            IRC.SendMsg("BUUUURN: " + response);
         } else if(msgString.Contains("wind"))
         {
             var s = msgString.Split('=');
-            foreach(var str in s)
-                Debug.Log(str);
-           response = await weatherClient.GetWeatherInvoice("wind", int.Parse(s[1]));
-            IRC.SendMsg("Blowing in the wind: " + response);
+            response = response + await weatherClient.GetWeatherInvoice("wind", int.Parse(s[1]));
+            
         }
-        GetComponent<TwitchChatExample>().CreateUIMessage("sputnck1", response);
+        if (response != "") {
+            GetComponent<TwitchChatExample>().CreateUIMessage("sputnck1", response);
+            IRC.SendMsg(response);
+        }
+
     }
     void ChangeWeather(object sender, InvoiceSettledEventArgs e)
     {
         Debug.Log(e.Invoice.Memo);
+        var response = "";
         switch (e.Invoice.Memo)
         {
             case ("rain"):
-                IRC.SendMsg("RAIN ACTIVATED");
+                response = "RAIN ACTIVATED";
                 break;
             case ("fire"):
-                IRC.SendMsg("FIRE ACTIVATED");
+                response = "FIRE ACTIVATED";
                 break;
             case ("wind"):
-                IRC.SendMsg("Wind ACTIVATED AT SPEED " + e.Invoice.Value);
+                response = "Wind ACTIVATED AT SPEED " + e.Invoice.Value;
                 break;
 
         }
-
+        if (response != "")
+        {
+            IRC.SendMsg(response);
+            GetComponent<TwitchChatExample>().CreateUIMessage("sputnck1", response);
+        }
     }
 }
