@@ -9,26 +9,41 @@ public class WeatherLndClient : LndRpcBridge {
 
     public string hostname;
     public string port;
+    public string certFile;
+    public string macaroonFile;
+    public string pubkey { get; private set; }
+    public bool readConfig;
     string cert;
     string mac;
-
     public GameObject[] particleEffects;
     public WindZone windZone;
     public GameObject Sphere;
 
-    
+    LndConfig config;
 
     // Use this for initialization
     async void Start () {
-        cert = File.ReadAllText(Application.dataPath + "/Resources/tls.cert");
+        if (readConfig)
+        {
+            config = LndHelper.ReadConfigFile(Application.dataPath + "/Resources/donner.conf");
+        }
+        else
+        {
+            config = new LndConfig { Hostname = hostname, Port = port, MacaroonFile = macaroonFile, TlsFile = certFile };
+        }
+        LndHelper.SetupEnvironmentVariables();
+        cert = File.ReadAllText(Application.dataPath + "/Resources/" + config.TlsFile);
 
-        mac = LndHelper.ToHex(File.ReadAllBytes(Application.dataPath + "/Resources/admin.macaroon"));
+        mac = LndHelper.ToHex(File.ReadAllBytes(Application.dataPath + "/Resources/" + config.MacaroonFile));
 
-        await ConnectToLndWithMacaroon(hostname + ":" + port, cert,mac);
+       
+        await ConnectToLndWithMacaroon(config.Hostname + ":" + config.Port, cert, mac);
         OnInvoiceSettled += new InvoiceSettledEventHandler(ChangeWeather);
-
-        //ListenInvoices();
+        
         SubscribeInvoices();
+
+        var getInfo = await GetInfo();
+        pubkey = getInfo.IdentityPubkey;
     }
 
     void ChangeWeather(object sender, InvoiceSettledEventArgs e)

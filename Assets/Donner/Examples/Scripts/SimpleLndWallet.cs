@@ -47,7 +47,9 @@ public class SimpleLndWallet : LndRpcBridge
 
 
 
-    private void OnEnable()
+  
+    // Use this for initialization
+    async void Start()
     {
         if (readConfig)
         {
@@ -58,16 +60,10 @@ public class SimpleLndWallet : LndRpcBridge
             config = new LndConfig { Hostname = hostname, Port = port, MacaroonFile = macaroonFile, TlsFile = certFile };
         }
         LndHelper.SetupEnvironmentVariables();
-    }
-    // Use this for initialization
-    async void Start()
-    {
-        
         cert = File.ReadAllText(Application.dataPath + "/Resources/"+config.TlsFile);
         
         mac = LndHelper.ToHex(File.ReadAllBytes(Application.dataPath + "/Resources/"+config.MacaroonFile));
-
-        //await ConnectToLnd(hostname + ":" + port, cert);
+        
         await ConnectToLndWithMacaroon(config.Hostname + ":" + config.Port, cert,mac);
     }
 

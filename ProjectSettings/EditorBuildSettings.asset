@@ -5,7 +5,12 @@ EditorBuildSettings:
   m_ObjectHideFlags: 0
   serializedVersion: 2
   m_Scenes:
-  - enabled: 1
+  - enabled: 0
     path: Assets/Donner/Examples/BasicWallet.unity
     guid: 4a492c72f557e584f956698ff14f52fa
-  m_configObjects: {}
+  - enabled: 0
+    path: Assets/Donner/Examples/WeatherChangeTwitch.unity
+    guid: 3ffac38698309db499d804d25b367666
+  - enabled: 1
+    path: Assets/Donner/Examples/WeatherChangeWebServer.unity
+    guid: a716a31bbfcd7b84c8a05f16cd9bab2f

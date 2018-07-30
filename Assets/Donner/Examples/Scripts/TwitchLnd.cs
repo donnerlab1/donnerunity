@@ -6,7 +6,8 @@ using Donner;
 [RequireComponent(typeof(TwitchIRC))]
 public class TwitchLnd : MonoBehaviour
 {
-
+    string externalIp;
+    string port = "9735";
     private TwitchIRC IRC;
     public WeatherLndClient weatherClient;
     // Use this for initialization
@@ -15,6 +16,8 @@ public class TwitchLnd : MonoBehaviour
         IRC = this.GetComponent<TwitchIRC>();
         IRC.messageRecievedEvent.AddListener(OnChatMsgRecieved);
         weatherClient.OnInvoiceSettled += new InvoiceSettledEventHandler(ChangeWeather);
+
+        StartCoroutine(GetPublicIP());
     }
 
     // Update is called once per frame
@@ -45,11 +48,15 @@ public class TwitchLnd : MonoBehaviour
             var s = msgString.Split('=');
             response = response + await weatherClient.GetWeatherInvoice("wind", int.Parse(s[1]));
             
+        } else if(msgString == "!channel")
+        {
+            response = weatherClient.pubkey + "@" + externalIp + ":" + port;
         }
         if (response != "") {
             GetComponent<TwitchChatExample>().CreateUIMessage("sputnck1", response);
             IRC.SendMsg(response);
         }
+
 
     }
     void ChangeWeather(object sender, InvoiceSettledEventArgs e)
@@ -73,6 +80,19 @@ public class TwitchLnd : MonoBehaviour
         {
             IRC.SendMsg(response);
             GetComponent<TwitchChatExample>().CreateUIMessage("sputnck1", response);
+        }
+    }
+
+
+    IEnumerator GetPublicIP()
+    {
+        using (WWW www = new WWW("https://ipv4.myexternalip.com/raw"))
+        {
+            yield return www;
+            var temp = www.text;
+            externalIp = LndHelper.RemoveWhitespace(temp);
+            Debug.Log(www.text);
+
         }
     }
 }

@@ -6,10 +6,13 @@ using Donner;
 using UnityEngine.Networking;
 using System;
 
-public class lndPlaysController : LndRpcBridge {
+public class lnPlaysController : LndRpcBridge {
 
     public string hostname;
     public string port;
+    public string certFile;
+    public string macaroonFile;
+    public bool readConfig;
     string cert;
     string mac;
     bool pressLastButton;
@@ -17,13 +20,26 @@ public class lndPlaysController : LndRpcBridge {
     [SerializeField]
     public string lastButton;
 
+
+    LndConfig config;
+
     // Use this for initialization
     async void Start() {
-        cert = File.ReadAllText(Application.dataPath + "/Resources/tls.cert");
 
-        mac = LndHelper.ToHex(File.ReadAllBytes(Application.dataPath + "/Resources/admin.macaroon"));
+        if (readConfig)
+        {
+            config = LndHelper.ReadConfigFile(Application.dataPath + "/Resources/donner.conf");
+        }
+        else
+        {
+            config = new LndConfig { Hostname = hostname, Port = port, MacaroonFile = macaroonFile, TlsFile = certFile };
+        }
+        LndHelper.SetupEnvironmentVariables();
+        cert = File.ReadAllText(Application.dataPath + "/Resources/" + config.TlsFile);
 
-        await ConnectToLndWithMacaroon(hostname + ":" + port, cert, mac);
+        mac = LndHelper.ToHex(File.ReadAllBytes(Application.dataPath + "/Resources/" + config.MacaroonFile));
+        
+        await ConnectToLndWithMacaroon(config.Hostname + ":" + config.Port, cert, mac);
     }
 
     // Update is called once per frame
