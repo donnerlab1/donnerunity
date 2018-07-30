@@ -56,5 +56,17 @@ namespace Donner
         {
             lndProcess.Kill();
         }
+
+        public static LndConfig ReadConfigFile(string url)
+        {
+            if (File.Exists(url))
+            {
+                var dataString = File.ReadAllText(url);
+                UnityEngine.Debug.Log(dataString);
+                return JsonUtility.FromJson<LndConfig>(dataString);
+            }
+            else { return null; }
+            
+        }
     }
 }

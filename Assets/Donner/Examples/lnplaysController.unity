@@ -288,6 +288,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   hostname: localhost
   port: 10009
+  lastPressTrigger: 0
+  lastButton: 
 --- !u!4 &1663351407
 Transform:
   m_ObjectHideFlags: 0

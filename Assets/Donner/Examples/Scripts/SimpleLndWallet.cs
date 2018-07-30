@@ -3,7 +3,6 @@ using UnityEngine;
 using UnityEngine.UI;
 using System.IO;
 using Donner;
-using QRCoder;
 using System;
 
 public class SimpleLndWallet : LndRpcBridge
@@ -11,8 +10,11 @@ public class SimpleLndWallet : LndRpcBridge
 
     public string hostname;
     public string port;
+    public string certFile;
+    public string macaroonFile;
     string cert;
     string mac;
+    public bool readConfig;
     public int pixelPerUnit;
     public InputField pwInput;
     public Text balanceOutput;
@@ -41,20 +43,32 @@ public class SimpleLndWallet : LndRpcBridge
     public InputField blockHeight;
     public InputField blockHash;
 
+    LndConfig config;
 
 
 
-
+    private void OnEnable()
+    {
+        if (readConfig)
+        {
+            config = LndHelper.ReadConfigFile(Application.dataPath + "/Resources/donner.conf");
+        }
+        else
+        {
+            config = new LndConfig { Hostname = hostname, Port = port, MacaroonFile = macaroonFile, TlsFile = certFile };
+        }
+        LndHelper.SetupEnvironmentVariables();
+    }
     // Use this for initialization
     async void Start()
     {
-        LndHelper.SetupEnvironmentVariables();
-        cert = File.ReadAllText(Application.dataPath + "/Resources/tls.cert");
         
-        mac = LndHelper.ToHex(File.ReadAllBytes(Application.dataPath + "/Resources/admin.macaroon"));
+        cert = File.ReadAllText(Application.dataPath + "/Resources/"+config.TlsFile);
+        
+        mac = LndHelper.ToHex(File.ReadAllBytes(Application.dataPath + "/Resources/"+config.MacaroonFile));
 
         //await ConnectToLnd(hostname + ":" + port, cert);
-        await ConnectToLndWithMacaroon(hostname + ":" + port, cert,mac);
+        await ConnectToLndWithMacaroon(config.Hostname + ":" + config.Port, cert,mac);
     }
 
     public async void OnUnlockWallet()
@@ -82,14 +96,14 @@ public class SimpleLndWallet : LndRpcBridge
     {
         var s = await NewWitnessAdress();
         Debug.Log(s.ToString());
-        var payload = new PayloadGenerator.BitcoinAddress(s, 0, null, "pay Unity").ToString();
-        var qrCodeGenerator = new QRCodeGenerator();
-        var qrCodeData = qrCodeGenerator.CreateQrCode(payload, QRCodeGenerator.ECCLevel.Q);
-        var qrCode = new UnityQRCode(qrCodeData).GetGraphic(pixelPerUnit);
-        var addrSprite = Sprite.Create(qrCode, new Rect(0, 0, qrCode.width, qrCode.height), Vector2.zero, pixelPerUnit, 0,SpriteMeshType.FullRect, new Vector4(0,1,0,1));
+        //var payload = new PayloadGenerator.BitcoinAddress(s, 0, null, "pay Unity").ToString();
+        //var qrCodeGenerator = new QRCodeGenerator();
+        //var qrCodeData = qrCodeGenerator.CreateQrCode(payload, QRCodeGenerator.ECCLevel.Q);
+        //var qrCode = new UnityQRCode(qrCodeData).GetGraphic(pixelPerUnit);
+        //var addrSprite = Sprite.Create(qrCode, new Rect(0, 0, qrCode.width, qrCode.height), Vector2.zero, pixelPerUnit, 0,SpriteMeshType.FullRect, new Vector4(0,1,0,1));
 
-        addrImg.sprite = addrSprite;
-        addrImg.preserveAspect = true;
+        //addrImg.sprite = addrSprite;
+        //addrImg.preserveAspect = true;
         addrOutput.text = s.ToString();
         
     }
