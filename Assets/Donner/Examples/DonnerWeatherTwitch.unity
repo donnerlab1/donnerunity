@@ -513,9 +513,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 51b07732a3238bf4d8df5fbac5a25173, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  oauth: oauth:j0i2w8bnnju1e1snkiv5srz34jprhz
-  nickName: sputnck1
-  channelName: sputnck1
+  oauth: 
+  nickName: 
+  channelName: 
 --- !u!4 &539254827
 Transform:
   m_ObjectHideFlags: 0
@@ -857,7 +857,7 @@ GameObject:
   - component: {fileID: 1048370953}
   - component: {fileID: 1048370952}
   m_Layer: 0
-  m_Name: Lnd
+  m_Name: Donner
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

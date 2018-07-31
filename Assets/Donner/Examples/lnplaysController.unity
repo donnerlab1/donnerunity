@@ -269,7 +269,7 @@ GameObject:
   - component: {fileID: 1663351407}
   - component: {fileID: 1663351406}
   m_Layer: 0
-  m_Name: LndController
+  m_Name: Donner
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -290,7 +290,7 @@ MonoBehaviour:
   port: 10009
   certFile: tls.cert
   macaroonFile: admin.macaroon
-  readConfig: 0
+  readConfig: 1
   lastPressTrigger: 0
   lastButton: 
 --- !u!4 &1663351407

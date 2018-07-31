@@ -13,11 +13,11 @@ public class PaymentsHttpServer : MonoBehaviour {
     WebServer ws;
     public WeatherLndClient weatherClient;
     string externalIp;
-    
+    public string webserverPort = "8079";
     string port = "9735";
     // Use this for initialization
     void Start () {
-        ws = new WebServer(SendResponse, "http://*:8079/weather/");
+        ws = new WebServer(SendResponse, "http://*:"+webserverPort+"/weather/");
         ws.Run();
         
         StartCoroutine(GetPublicIP());
