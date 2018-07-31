@@ -1,37 +1,71 @@
-# Donner
+# DonnerUnity
 
-Donner is a Lightning plugin for Unity. It uses grpc to communicate with a local [`lnd`](https://github.com/lightningnetwork/lnd) node.
+## Introduction
+DonnerUnity is a [Lightning](https://lightning.network/) based payment plugin for the Unity game engine. It enables near-instant, scalable and low cost microtransactions using sound and permissionless money. The plugin can replace currently used payments systems and enables completly new game mechanics. It allows developers to provide players with a sense of pride and accomplishment.
 
-## Install
+### Comparison
 
-### Windows
-Should work out of the box, just clone the repo and open with Unity.
+| Service | fee | minimum amount | maximum amount | personal data required | trusted third party | 
+:---:|:---:|:---:|:---:|:---:|:---:
+**DonnerUnity** | 0% | $0.00008 * | $137 billion *|- [ ] no | - [ ] no
+**Steamworks** | 30% | $0.01 | $2000 in 24h |- [x] yes | - [x] yes
+**App Store** | 30% | $0.99 | $999.99 |- [x] yes  | - [x] yes
 
-### Mac
-Copy the files in /Assets/Scripts/runtimes/osx/native to /usr/local/lib/
+*: assuming 8000$ USD/BTC
 
 
-### Linux
-Not tested, could work out of the box.
+## Installation
+
+### Prerequisites
+
+- Unity 2017.1 or newer
+- a locally or remote running [lnd](https://github.com/lightningnetwork/lnd) node (see [installation instructions](docs/INSTALL.md))
+
+### Importing
+
+- clone the repository or download the binary
+- make sure your project is set to .NET 4.6 runtime
+- import the donner folder or assetbundle
+
+### Setup
+
+- copy your tls.cert and admin.macaroon to Assets/Resources/
+- edit the donner.conf file in Assets/Resources/ to your liking
+
+### Building
+
+- after building your project copy your tls.cert, admin.macaroon and donner.conf to the _Data/Resources folder
+- copy the files grpc_csharp_ext.x86.dll and grpc_csharp_ext.x64.dll from _Data/Plugins in your _Data/Managed folder
+- or run the editor items under "Donner"
+
 
 ## Usage
-- copy your tls.cert and admin.macaroon files to /Assets/Resources
-- a small wallet example scene is located in Assets/Donner/Examples
-- all lightning relevant [`api`](http://api.lightning.community/) calls are implemented.
 
-##Examples
+- create a class that inherits from LndRpcBridge and create your own custom logic
+- it is best explained by looking through the example scenes
 
-#SimpleWallet
-- lnd wallet made with unity
-- point the Simple Lnd Wallet Scripts of Donner Gameobject to your local or remote lnd node (hostname and port). and copy you tls.cert and admin.macaroon inside you Resources folder
+## Example scenes
 
-#WeatherChange
-- creates a http webserver that creates invoices. if the invoices are settled the weather changes
-- goto localhost:8081/weather? to see instruction
-- optional twitch chat support enter your Twitch Oauth key, nickname and channelname in the inspector of TwitchIRC
+### BasicWallet
 
-#NetworkPaymentsLnd
-- buggy atm
+- simple lightning wallet with basic functionality
+- look at Donner Gameobject and SimpleLndWallet.cs for logic
 
-## Troubleshooting
-- run LndHelper.SetupEnvironmentVariables() in Start() if connection is not working
+### lnplaysController
+
+- controller for [lnplays](https://lnplays.com)(currently down)
+- look at Donner Gameobject and LnPlaysController.cs for logic
+
+### DonnerWeatherTwitch
+- listens to your twitch chat for commands !rain !fire !channel and sends invoices to the chat
+- if a invoice is paid the weather changes
+- change Oauth Nick Name and Channel Name of TwitchIRC gameobject to yours
+- look at Donner Gameobject, WeatherLndClient.cs and TwitchLnd.cs for logic
+
+### DonnerWeatherWeb
+- same functionality as the twitch version
+- creates webserver that sends invoices
+- goto localhost:8079/weather? to see instructions
+- look at Donner Gameobject, WeatherLndClient.cs and PaymentsHttpServer.cs for logic
+
+
