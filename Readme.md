@@ -68,4 +68,7 @@ DonnerUnity is a [Lightning](https://lightning.network/) based payment plugin fo
 - goto localhost:8079/weather? to see instructions
 - look at Donner Gameobject, WeatherLndClient.cs and PaymentsHttpServer.cs for logic
 
+### DonnerTanks!
+- local arcade game with microtransactions
+- see [repo](https://github.com/donnerlab1/DonnerTanks)
 
