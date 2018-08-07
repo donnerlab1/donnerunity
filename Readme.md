@@ -47,7 +47,7 @@ DonnerUnity is a [Lightning](https://lightning.network/) based payment plugin fo
 ## Example scenes
 
 ### BasicWallet
-![invoice](./docs/media/wallet.png)
+![wallet](./docs/media/wallet.png | height=400) 
 - simple lightning wallet with basic functionality
 - look at Donner Gameobject and SimpleLndWallet.cs for logic
 
@@ -57,18 +57,23 @@ DonnerUnity is a [Lightning](https://lightning.network/) based payment plugin fo
 - look at Donner Gameobject and LnPlaysController.cs for logic
 
 ### DonnerWeatherTwitch
+
+![rain](./docs/media/rain.png)
 - listens to your twitch chat for commands !rain !fire !channel and sends invoices to the chat
 - if a invoice is paid the weather changes
 - change Oauth Nick Name and Channel Name of TwitchIRC gameobject to yours
 - look at Donner Gameobject, WeatherLndClient.cs and TwitchLnd.cs for logic
 
 ### DonnerWeatherWeb
+![invoice](./docs/media/invoice.png)
 - same functionality as the twitch version
 - creates webserver that sends invoices
 - goto localhost:8079/weather? to see instructions
 - look at Donner Gameobject, WeatherLndClient.cs and PaymentsHttpServer.cs for logic
 
 ### DonnerTanks!
+
+![tank](./docs/media/tanks.png)
 - local arcade game with microtransactions
 - see [repo](https://github.com/donnerlab1/DonnerTanks)
 
