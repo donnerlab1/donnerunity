@@ -47,7 +47,7 @@ DonnerUnity is a [Lightning](https://lightning.network/) based payment plugin fo
 ## Example scenes
 
 ### BasicWallet
-
+![invoice](./docs/media/wallet.png =360x)
 - simple lightning wallet with basic functionality
 - look at Donner Gameobject and SimpleLndWallet.cs for logic
 
