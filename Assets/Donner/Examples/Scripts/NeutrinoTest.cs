@@ -10,24 +10,30 @@ public class NeutrinoTest : MonoBehaviour {
     Process lnd;
 	// Use this for initialization
 	void Start () {
+        
+    }
+
+    public void StartLnd(LndConfig config)
+    {
         try
         {
             ProcessStartInfo lndStartinfo = new ProcessStartInfo();
             UnityEngine.Debug.Log(Application.dataPath);
             lndStartinfo.FileName = Application.dataPath + "/Resources/Neutrino/lnd.exe";
             lndStartinfo.WorkingDirectory = Application.dataPath + "/Resources/Neutrino/";
-            lndStartinfo.Arguments = "--configfile=test_data_neutrino/lnd.conf --rpclisten=localhost:10013 --restlisten=localhost:8089 --listen=0.0.0.0:9750";
+            lndStartinfo.Arguments = "--configfile=test_data_neutrino/lnd.conf --rpclisten="+config.Hostname+":"+config.Port+" --restlisten=localhost:8089 --listen=0.0.0.0:9750";
             lndStartinfo.UseShellExecute = false;
             lndStartinfo.RedirectStandardOutput = true;
             lndStartinfo.RedirectStandardError = true;
             lndStartinfo.WindowStyle = ProcessWindowStyle.Hidden;
-            lndStartinfo.CreateNoWindow = true;
+            //lndStartinfo.CreateNoWindow = true;
             lnd = Process.Start(lndStartinfo);
             lnd.ErrorDataReceived += Lnd_ErrorDataReceived;
             lnd.OutputDataReceived += Lnd_OutputDataReceived;
-            
+
             lnd.BeginErrorReadLine();
             lnd.BeginOutputReadLine();
+
             //
             /*
              * lnd = new Process();
@@ -55,12 +61,12 @@ public class NeutrinoTest : MonoBehaviour {
 
     private void Lnd_ErrorDataReceived(object sender, DataReceivedEventArgs e)
     {
-        UnityEngine.Debug.Log(e.Data);
+        UnityEngine.Debug.unityLogger.Log("lnd-neutrino-error", e.Data);
     }
 
     private void Lnd_OutputDataReceived(object sender, DataReceivedEventArgs e)
     {
-       UnityEngine.Debug.Log(e.Data);
+       UnityEngine.Debug.unityLogger.Log("lnd-neutrino",e.Data);
     }
 
     // Update is called once per frame

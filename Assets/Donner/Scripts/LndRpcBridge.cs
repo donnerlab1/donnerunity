@@ -75,9 +75,11 @@ namespace Donner
             if (!string.IsNullOrEmpty(aezeedPassphrase))
                 genSeedRequest.AezeedPassphrase = ByteString.CopyFromUtf8(aezeedPassphrase);
             var genSeedResponse = await walletUnlocker.GenSeedAsync(genSeedRequest);
+            walletRpcChannel.ShutdownAsync().Wait();
             return genSeedResponse.CipherSeedMnemonic.ToArray(); ;
         }
 
+       
 
         public async Task<string> UnlockWallet(string walletPassword, string[] mnemonic)
         {
@@ -94,7 +96,7 @@ namespace Donner
                 walletRpcChannel.ShutdownAsync().Wait();
                 
 
-                return "unlocked";
+                return "created Wallet";
             } catch(RpcException e)
             {
                 if(e.Status.Detail == "wallet already exists")
