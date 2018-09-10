@@ -394,6 +394,11 @@ lnd_log/
 
 Assets/Resources/admin.macaroon
 Assets/Resources/readonly.macaroon
-Assets/Resources/tls.cert
+Assets/Resources/tls.*
 Assets/Resources/lnd/
+Assets/Resources/lnd.meta
 Assets/testing/
+Assets/Resources/Neutrino/*
+Assets/Resources/Neutrino.meta
+Assets/Resources/admin.*
+Assets/Resources/readonly.*

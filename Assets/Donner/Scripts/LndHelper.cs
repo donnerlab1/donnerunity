@@ -39,5 +39,28 @@ namespace Donner
                 .Where(c => !Char.IsWhiteSpace(c))
                 .ToArray());
         }
+
+        public static void StartLndWithNeutrino()
+        {
+            try
+            {
+                Process lnd = new Process();
+                lnd.StartInfo.WindowStyle = ProcessWindowStyle.Hidden;
+                //lnd.StartInfo.CreateNoWindow = true;
+                //lnd.StartInfo.UseShellExecute = true;
+                lnd.StartInfo.FileName = Application.dataPath + "/Resources/Neutrino/lndNeutrino.cmd";
+                lnd.OutputDataReceived += Lnd_OutputDataReceived;
+                lnd.Start();
+
+            } catch(Exception e)
+            {
+                UnityEngine.Debug.Log(e);
+            }
+        }
+
+        private static void Lnd_OutputDataReceived(object sender, DataReceivedEventArgs e)
+        {
+            UnityEngine.Debug.Log(e.Data);
+        }
     }
 }
