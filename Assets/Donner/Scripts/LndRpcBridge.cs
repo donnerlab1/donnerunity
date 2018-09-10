@@ -239,6 +239,12 @@ namespace Donner
             return response.Channels.ToArray();
         }
 
+        public async Task<Lnrpc.ChannelCloseSummary[]> ListClosedChannels()
+        {
+            var response = await lndClient.ClosedChannelsAsync(new ClosedChannelsRequest());
+            return response.Channels.ToArray();
+        }
+
         public async Task<string> OpenChannel(string pubkey, int fundingAmount, int pushAmount = 0, int targetConf = 1)
         {
 
@@ -262,7 +268,7 @@ namespace Donner
             }
             return null;
         }
-
+        
         public async Task<SendResponse> SendPayment(string paymentRequest)
         {
             var request = new SendRequest() { PaymentRequest = paymentRequest };
@@ -274,6 +280,16 @@ namespace Donner
             return await lndClient.SendPaymentSyncAsync(request);
         }
 
+        public async Task<SendResponse> SendToRoute(string paymentHash, Route[] routes)
+        {
+            var request = new SendToRouteRequest()
+            {
+                PaymentHashString = paymentHash,
+
+            };
+            request.Routes.Add(routes);
+            return await lndClient.SendToRouteSyncAsync(request);
+        }
         public async Task<string> AddInvoice(int amount, string memo ="")
         {
             var request = new Invoice() { Value = amount, Memo = memo };

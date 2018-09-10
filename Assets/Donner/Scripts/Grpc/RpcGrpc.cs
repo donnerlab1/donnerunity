@@ -23,6 +23,8 @@ namespace Lnrpc {
     static readonly grpc::Marshaller<global::Lnrpc.InitWalletResponse> __Marshaller_InitWalletResponse = grpc::Marshallers.Create((arg) => global::Google.Protobuf.MessageExtensions.ToByteArray(arg), global::Lnrpc.InitWalletResponse.Parser.ParseFrom);
     static readonly grpc::Marshaller<global::Lnrpc.UnlockWalletRequest> __Marshaller_UnlockWalletRequest = grpc::Marshallers.Create((arg) => global::Google.Protobuf.MessageExtensions.ToByteArray(arg), global::Lnrpc.UnlockWalletRequest.Parser.ParseFrom);
     static readonly grpc::Marshaller<global::Lnrpc.UnlockWalletResponse> __Marshaller_UnlockWalletResponse = grpc::Marshallers.Create((arg) => global::Google.Protobuf.MessageExtensions.ToByteArray(arg), global::Lnrpc.UnlockWalletResponse.Parser.ParseFrom);
+    static readonly grpc::Marshaller<global::Lnrpc.ChangePasswordRequest> __Marshaller_ChangePasswordRequest = grpc::Marshallers.Create((arg) => global::Google.Protobuf.MessageExtensions.ToByteArray(arg), global::Lnrpc.ChangePasswordRequest.Parser.ParseFrom);
+    static readonly grpc::Marshaller<global::Lnrpc.ChangePasswordResponse> __Marshaller_ChangePasswordResponse = grpc::Marshallers.Create((arg) => global::Google.Protobuf.MessageExtensions.ToByteArray(arg), global::Lnrpc.ChangePasswordResponse.Parser.ParseFrom);
 
     static readonly grpc::Method<global::Lnrpc.GenSeedRequest, global::Lnrpc.GenSeedResponse> __Method_GenSeed = new grpc::Method<global::Lnrpc.GenSeedRequest, global::Lnrpc.GenSeedResponse>(
         grpc::MethodType.Unary,
@@ -44,6 +46,13 @@ namespace Lnrpc {
         "UnlockWallet",
         __Marshaller_UnlockWalletRequest,
         __Marshaller_UnlockWalletResponse);
+
+    static readonly grpc::Method<global::Lnrpc.ChangePasswordRequest, global::Lnrpc.ChangePasswordResponse> __Method_ChangePassword = new grpc::Method<global::Lnrpc.ChangePasswordRequest, global::Lnrpc.ChangePasswordResponse>(
+        grpc::MethodType.Unary,
+        __ServiceName,
+        "ChangePassword",
+        __Marshaller_ChangePasswordRequest,
+        __Marshaller_ChangePasswordResponse);
 
     /// <summary>Service descriptor</summary>
     public static global::Google.Protobuf.Reflection.ServiceDescriptor Descriptor
@@ -105,6 +114,19 @@ namespace Lnrpc {
       /// <param name="context">The context of the server-side call handler being invoked.</param>
       /// <returns>The response to send back to the client (wrapped by a task).</returns>
       public virtual global::System.Threading.Tasks.Task<global::Lnrpc.UnlockWalletResponse> UnlockWallet(global::Lnrpc.UnlockWalletRequest request, grpc::ServerCallContext context)
+      {
+        throw new grpc::RpcException(new grpc::Status(grpc::StatusCode.Unimplemented, ""));
+      }
+
+      /// <summary>
+      ///* lncli: `changepassword`
+      ///ChangePassword changes the password of the encrypted wallet. This will
+      ///automatically unlock the wallet database if successful.
+      /// </summary>
+      /// <param name="request">The request received from the client.</param>
+      /// <param name="context">The context of the server-side call handler being invoked.</param>
+      /// <returns>The response to send back to the client (wrapped by a task).</returns>
+      public virtual global::System.Threading.Tasks.Task<global::Lnrpc.ChangePasswordResponse> ChangePassword(global::Lnrpc.ChangePasswordRequest request, grpc::ServerCallContext context)
       {
         throw new grpc::RpcException(new grpc::Status(grpc::StatusCode.Unimplemented, ""));
       }
@@ -354,6 +376,58 @@ namespace Lnrpc {
       {
         return CallInvoker.AsyncUnaryCall(__Method_UnlockWallet, null, options, request);
       }
+      /// <summary>
+      ///* lncli: `changepassword`
+      ///ChangePassword changes the password of the encrypted wallet. This will
+      ///automatically unlock the wallet database if successful.
+      /// </summary>
+      /// <param name="request">The request to send to the server.</param>
+      /// <param name="headers">The initial metadata to send with the call. This parameter is optional.</param>
+      /// <param name="deadline">An optional deadline for the call. The call will be cancelled if deadline is hit.</param>
+      /// <param name="cancellationToken">An optional token for canceling the call.</param>
+      /// <returns>The response received from the server.</returns>
+      public virtual global::Lnrpc.ChangePasswordResponse ChangePassword(global::Lnrpc.ChangePasswordRequest request, grpc::Metadata headers = null, DateTime? deadline = null, CancellationToken cancellationToken = default(CancellationToken))
+      {
+        return ChangePassword(request, new grpc::CallOptions(headers, deadline, cancellationToken));
+      }
+      /// <summary>
+      ///* lncli: `changepassword`
+      ///ChangePassword changes the password of the encrypted wallet. This will
+      ///automatically unlock the wallet database if successful.
+      /// </summary>
+      /// <param name="request">The request to send to the server.</param>
+      /// <param name="options">The options for the call.</param>
+      /// <returns>The response received from the server.</returns>
+      public virtual global::Lnrpc.ChangePasswordResponse ChangePassword(global::Lnrpc.ChangePasswordRequest request, grpc::CallOptions options)
+      {
+        return CallInvoker.BlockingUnaryCall(__Method_ChangePassword, null, options, request);
+      }
+      /// <summary>
+      ///* lncli: `changepassword`
+      ///ChangePassword changes the password of the encrypted wallet. This will
+      ///automatically unlock the wallet database if successful.
+      /// </summary>
+      /// <param name="request">The request to send to the server.</param>
+      /// <param name="headers">The initial metadata to send with the call. This parameter is optional.</param>
+      /// <param name="deadline">An optional deadline for the call. The call will be cancelled if deadline is hit.</param>
+      /// <param name="cancellationToken">An optional token for canceling the call.</param>
+      /// <returns>The call object.</returns>
+      public virtual grpc::AsyncUnaryCall<global::Lnrpc.ChangePasswordResponse> ChangePasswordAsync(global::Lnrpc.ChangePasswordRequest request, grpc::Metadata headers = null, DateTime? deadline = null, CancellationToken cancellationToken = default(CancellationToken))
+      {
+        return ChangePasswordAsync(request, new grpc::CallOptions(headers, deadline, cancellationToken));
+      }
+      /// <summary>
+      ///* lncli: `changepassword`
+      ///ChangePassword changes the password of the encrypted wallet. This will
+      ///automatically unlock the wallet database if successful.
+      /// </summary>
+      /// <param name="request">The request to send to the server.</param>
+      /// <param name="options">The options for the call.</param>
+      /// <returns>The call object.</returns>
+      public virtual grpc::AsyncUnaryCall<global::Lnrpc.ChangePasswordResponse> ChangePasswordAsync(global::Lnrpc.ChangePasswordRequest request, grpc::CallOptions options)
+      {
+        return CallInvoker.AsyncUnaryCall(__Method_ChangePassword, null, options, request);
+      }
       /// <summary>Creates a new instance of client from given <c>ClientBaseConfiguration</c>.</summary>
       protected override WalletUnlockerClient NewInstance(ClientBaseConfiguration configuration)
       {
@@ -368,7 +442,8 @@ namespace Lnrpc {
       return grpc::ServerServiceDefinition.CreateBuilder()
           .AddMethod(__Method_GenSeed, serviceImpl.GenSeed)
           .AddMethod(__Method_InitWallet, serviceImpl.InitWallet)
-          .AddMethod(__Method_UnlockWallet, serviceImpl.UnlockWallet).Build();
+          .AddMethod(__Method_UnlockWallet, serviceImpl.UnlockWallet)
+          .AddMethod(__Method_ChangePassword, serviceImpl.ChangePassword).Build();
     }
 
   }
@@ -406,6 +481,8 @@ namespace Lnrpc {
     static readonly grpc::Marshaller<global::Lnrpc.PendingChannelsResponse> __Marshaller_PendingChannelsResponse = grpc::Marshallers.Create((arg) => global::Google.Protobuf.MessageExtensions.ToByteArray(arg), global::Lnrpc.PendingChannelsResponse.Parser.ParseFrom);
     static readonly grpc::Marshaller<global::Lnrpc.ListChannelsRequest> __Marshaller_ListChannelsRequest = grpc::Marshallers.Create((arg) => global::Google.Protobuf.MessageExtensions.ToByteArray(arg), global::Lnrpc.ListChannelsRequest.Parser.ParseFrom);
     static readonly grpc::Marshaller<global::Lnrpc.ListChannelsResponse> __Marshaller_ListChannelsResponse = grpc::Marshallers.Create((arg) => global::Google.Protobuf.MessageExtensions.ToByteArray(arg), global::Lnrpc.ListChannelsResponse.Parser.ParseFrom);
+    static readonly grpc::Marshaller<global::Lnrpc.ClosedChannelsRequest> __Marshaller_ClosedChannelsRequest = grpc::Marshallers.Create((arg) => global::Google.Protobuf.MessageExtensions.ToByteArray(arg), global::Lnrpc.ClosedChannelsRequest.Parser.ParseFrom);
+    static readonly grpc::Marshaller<global::Lnrpc.ClosedChannelsResponse> __Marshaller_ClosedChannelsResponse = grpc::Marshallers.Create((arg) => global::Google.Protobuf.MessageExtensions.ToByteArray(arg), global::Lnrpc.ClosedChannelsResponse.Parser.ParseFrom);
     static readonly grpc::Marshaller<global::Lnrpc.OpenChannelRequest> __Marshaller_OpenChannelRequest = grpc::Marshallers.Create((arg) => global::Google.Protobuf.MessageExtensions.ToByteArray(arg), global::Lnrpc.OpenChannelRequest.Parser.ParseFrom);
     static readonly grpc::Marshaller<global::Lnrpc.ChannelPoint> __Marshaller_ChannelPoint = grpc::Marshallers.Create((arg) => global::Google.Protobuf.MessageExtensions.ToByteArray(arg), global::Lnrpc.ChannelPoint.Parser.ParseFrom);
     static readonly grpc::Marshaller<global::Lnrpc.OpenStatusUpdate> __Marshaller_OpenStatusUpdate = grpc::Marshallers.Create((arg) => global::Google.Protobuf.MessageExtensions.ToByteArray(arg), global::Lnrpc.OpenStatusUpdate.Parser.ParseFrom);
@@ -413,6 +490,7 @@ namespace Lnrpc {
     static readonly grpc::Marshaller<global::Lnrpc.CloseStatusUpdate> __Marshaller_CloseStatusUpdate = grpc::Marshallers.Create((arg) => global::Google.Protobuf.MessageExtensions.ToByteArray(arg), global::Lnrpc.CloseStatusUpdate.Parser.ParseFrom);
     static readonly grpc::Marshaller<global::Lnrpc.SendRequest> __Marshaller_SendRequest = grpc::Marshallers.Create((arg) => global::Google.Protobuf.MessageExtensions.ToByteArray(arg), global::Lnrpc.SendRequest.Parser.ParseFrom);
     static readonly grpc::Marshaller<global::Lnrpc.SendResponse> __Marshaller_SendResponse = grpc::Marshallers.Create((arg) => global::Google.Protobuf.MessageExtensions.ToByteArray(arg), global::Lnrpc.SendResponse.Parser.ParseFrom);
+    static readonly grpc::Marshaller<global::Lnrpc.SendToRouteRequest> __Marshaller_SendToRouteRequest = grpc::Marshallers.Create((arg) => global::Google.Protobuf.MessageExtensions.ToByteArray(arg), global::Lnrpc.SendToRouteRequest.Parser.ParseFrom);
     static readonly grpc::Marshaller<global::Lnrpc.Invoice> __Marshaller_Invoice = grpc::Marshallers.Create((arg) => global::Google.Protobuf.MessageExtensions.ToByteArray(arg), global::Lnrpc.Invoice.Parser.ParseFrom);
     static readonly grpc::Marshaller<global::Lnrpc.AddInvoiceResponse> __Marshaller_AddInvoiceResponse = grpc::Marshallers.Create((arg) => global::Google.Protobuf.MessageExtensions.ToByteArray(arg), global::Lnrpc.AddInvoiceResponse.Parser.ParseFrom);
     static readonly grpc::Marshaller<global::Lnrpc.ListInvoiceRequest> __Marshaller_ListInvoiceRequest = grpc::Marshallers.Create((arg) => global::Google.Protobuf.MessageExtensions.ToByteArray(arg), global::Lnrpc.ListInvoiceRequest.Parser.ParseFrom);
@@ -560,6 +638,13 @@ namespace Lnrpc {
         __Marshaller_ListChannelsRequest,
         __Marshaller_ListChannelsResponse);
 
+    static readonly grpc::Method<global::Lnrpc.ClosedChannelsRequest, global::Lnrpc.ClosedChannelsResponse> __Method_ClosedChannels = new grpc::Method<global::Lnrpc.ClosedChannelsRequest, global::Lnrpc.ClosedChannelsResponse>(
+        grpc::MethodType.Unary,
+        __ServiceName,
+        "ClosedChannels",
+        __Marshaller_ClosedChannelsRequest,
+        __Marshaller_ClosedChannelsResponse);
+
     static readonly grpc::Method<global::Lnrpc.OpenChannelRequest, global::Lnrpc.ChannelPoint> __Method_OpenChannelSync = new grpc::Method<global::Lnrpc.OpenChannelRequest, global::Lnrpc.ChannelPoint>(
         grpc::MethodType.Unary,
         __ServiceName,
@@ -593,6 +678,20 @@ namespace Lnrpc {
         __ServiceName,
         "SendPaymentSync",
         __Marshaller_SendRequest,
+        __Marshaller_SendResponse);
+
+    static readonly grpc::Method<global::Lnrpc.SendToRouteRequest, global::Lnrpc.SendResponse> __Method_SendToRoute = new grpc::Method<global::Lnrpc.SendToRouteRequest, global::Lnrpc.SendResponse>(
+        grpc::MethodType.DuplexStreaming,
+        __ServiceName,
+        "SendToRoute",
+        __Marshaller_SendToRouteRequest,
+        __Marshaller_SendResponse);
+
+    static readonly grpc::Method<global::Lnrpc.SendToRouteRequest, global::Lnrpc.SendResponse> __Method_SendToRouteSync = new grpc::Method<global::Lnrpc.SendToRouteRequest, global::Lnrpc.SendResponse>(
+        grpc::MethodType.Unary,
+        __ServiceName,
+        "SendToRouteSync",
+        __Marshaller_SendToRouteRequest,
         __Marshaller_SendResponse);
 
     static readonly grpc::Method<global::Lnrpc.Invoice, global::Lnrpc.AddInvoiceResponse> __Method_AddInvoice = new grpc::Method<global::Lnrpc.Invoice, global::Lnrpc.AddInvoiceResponse>(
@@ -952,6 +1051,19 @@ namespace Lnrpc {
       }
 
       /// <summary>
+      ///* lncli: `closedchannels`
+      ///ClosedChannels returns a description of all the closed channels that 
+      ///this node was a participant in.
+      /// </summary>
+      /// <param name="request">The request received from the client.</param>
+      /// <param name="context">The context of the server-side call handler being invoked.</param>
+      /// <returns>The response to send back to the client (wrapped by a task).</returns>
+      public virtual global::System.Threading.Tasks.Task<global::Lnrpc.ClosedChannelsResponse> ClosedChannels(global::Lnrpc.ClosedChannelsRequest request, grpc::ServerCallContext context)
+      {
+        throw new grpc::RpcException(new grpc::Status(grpc::StatusCode.Unimplemented, ""));
+      }
+
+      /// <summary>
       ///*
       ///OpenChannelSync is a synchronous version of the OpenChannel RPC call. This
       ///call is meant to be consumed by clients to the REST proxy. As with all
@@ -1034,6 +1146,35 @@ namespace Lnrpc {
       }
 
       /// <summary>
+      ///* lncli: `sendtoroute`
+      ///SendToRoute is a bi-directional streaming RPC for sending payment through
+      ///the Lightning Network. This method differs from SendPayment in that it
+      ///allows users to specify a full route manually. This can be used for things
+      ///like rebalancing, and atomic swaps.
+      /// </summary>
+      /// <param name="requestStream">Used for reading requests from the client.</param>
+      /// <param name="responseStream">Used for sending responses back to the client.</param>
+      /// <param name="context">The context of the server-side call handler being invoked.</param>
+      /// <returns>A task indicating completion of the handler.</returns>
+      public virtual global::System.Threading.Tasks.Task SendToRoute(grpc::IAsyncStreamReader<global::Lnrpc.SendToRouteRequest> requestStream, grpc::IServerStreamWriter<global::Lnrpc.SendResponse> responseStream, grpc::ServerCallContext context)
+      {
+        throw new grpc::RpcException(new grpc::Status(grpc::StatusCode.Unimplemented, ""));
+      }
+
+      /// <summary>
+      ///*
+      ///SendToRouteSync is a synchronous version of SendToRoute. It Will block
+      ///until the payment either fails or succeeds.
+      /// </summary>
+      /// <param name="request">The request received from the client.</param>
+      /// <param name="context">The context of the server-side call handler being invoked.</param>
+      /// <returns>The response to send back to the client (wrapped by a task).</returns>
+      public virtual global::System.Threading.Tasks.Task<global::Lnrpc.SendResponse> SendToRouteSync(global::Lnrpc.SendToRouteRequest request, grpc::ServerCallContext context)
+      {
+        throw new grpc::RpcException(new grpc::Status(grpc::StatusCode.Unimplemented, ""));
+      }
+
+      /// <summary>
       ///* lncli: `addinvoice`
       ///AddInvoice attempts to add a new invoice to the invoice database. Any
       ///duplicated invoices are rejected, therefore all invoices *must* have a
@@ -1077,7 +1218,14 @@ namespace Lnrpc {
       /// <summary>
       ///*
       ///SubscribeInvoices returns a uni-directional stream (sever -> client) for
-      ///notifying the client of newly added/settled invoices.
+      ///notifying the client of newly added/settled invoices. The caller can
+      ///optionally specify the add_index and/or the settle_index. If the add_index
+      ///is specified, then we'll first start by sending add invoice events for all
+      ///invoices with an add_index greater than the specified value.  If the
+      ///settle_index is specified, the next, we'll send out all settle events for
+      ///invoices with a settle_index greater than the specified value.  One or both
+      ///of these fields can be set. If no fields are set, then we'll only send out
+      ///the latest add/settle events.
       /// </summary>
       /// <param name="request">The request received from the client.</param>
       /// <param name="responseStream">Used for sending responses back to the client.</param>
@@ -2171,6 +2319,58 @@ namespace Lnrpc {
         return CallInvoker.AsyncUnaryCall(__Method_ListChannels, null, options, request);
       }
       /// <summary>
+      ///* lncli: `closedchannels`
+      ///ClosedChannels returns a description of all the closed channels that 
+      ///this node was a participant in.
+      /// </summary>
+      /// <param name="request">The request to send to the server.</param>
+      /// <param name="headers">The initial metadata to send with the call. This parameter is optional.</param>
+      /// <param name="deadline">An optional deadline for the call. The call will be cancelled if deadline is hit.</param>
+      /// <param name="cancellationToken">An optional token for canceling the call.</param>
+      /// <returns>The response received from the server.</returns>
+      public virtual global::Lnrpc.ClosedChannelsResponse ClosedChannels(global::Lnrpc.ClosedChannelsRequest request, grpc::Metadata headers = null, DateTime? deadline = null, CancellationToken cancellationToken = default(CancellationToken))
+      {
+        return ClosedChannels(request, new grpc::CallOptions(headers, deadline, cancellationToken));
+      }
+      /// <summary>
+      ///* lncli: `closedchannels`
+      ///ClosedChannels returns a description of all the closed channels that 
+      ///this node was a participant in.
+      /// </summary>
+      /// <param name="request">The request to send to the server.</param>
+      /// <param name="options">The options for the call.</param>
+      /// <returns>The response received from the server.</returns>
+      public virtual global::Lnrpc.ClosedChannelsResponse ClosedChannels(global::Lnrpc.ClosedChannelsRequest request, grpc::CallOptions options)
+      {
+        return CallInvoker.BlockingUnaryCall(__Method_ClosedChannels, null, options, request);
+      }
+      /// <summary>
+      ///* lncli: `closedchannels`
+      ///ClosedChannels returns a description of all the closed channels that 
+      ///this node was a participant in.
+      /// </summary>
+      /// <param name="request">The request to send to the server.</param>
+      /// <param name="headers">The initial metadata to send with the call. This parameter is optional.</param>
+      /// <param name="deadline">An optional deadline for the call. The call will be cancelled if deadline is hit.</param>
+      /// <param name="cancellationToken">An optional token for canceling the call.</param>
+      /// <returns>The call object.</returns>
+      public virtual grpc::AsyncUnaryCall<global::Lnrpc.ClosedChannelsResponse> ClosedChannelsAsync(global::Lnrpc.ClosedChannelsRequest request, grpc::Metadata headers = null, DateTime? deadline = null, CancellationToken cancellationToken = default(CancellationToken))
+      {
+        return ClosedChannelsAsync(request, new grpc::CallOptions(headers, deadline, cancellationToken));
+      }
+      /// <summary>
+      ///* lncli: `closedchannels`
+      ///ClosedChannels returns a description of all the closed channels that 
+      ///this node was a participant in.
+      /// </summary>
+      /// <param name="request">The request to send to the server.</param>
+      /// <param name="options">The options for the call.</param>
+      /// <returns>The call object.</returns>
+      public virtual grpc::AsyncUnaryCall<global::Lnrpc.ClosedChannelsResponse> ClosedChannelsAsync(global::Lnrpc.ClosedChannelsRequest request, grpc::CallOptions options)
+      {
+        return CallInvoker.AsyncUnaryCall(__Method_ClosedChannels, null, options, request);
+      }
+      /// <summary>
       ///*
       ///OpenChannelSync is a synchronous version of the OpenChannel RPC call. This
       ///call is meant to be consumed by clients to the REST proxy. As with all
@@ -2387,6 +2587,86 @@ namespace Lnrpc {
         return CallInvoker.AsyncUnaryCall(__Method_SendPaymentSync, null, options, request);
       }
       /// <summary>
+      ///* lncli: `sendtoroute`
+      ///SendToRoute is a bi-directional streaming RPC for sending payment through
+      ///the Lightning Network. This method differs from SendPayment in that it
+      ///allows users to specify a full route manually. This can be used for things
+      ///like rebalancing, and atomic swaps.
+      /// </summary>
+      /// <param name="headers">The initial metadata to send with the call. This parameter is optional.</param>
+      /// <param name="deadline">An optional deadline for the call. The call will be cancelled if deadline is hit.</param>
+      /// <param name="cancellationToken">An optional token for canceling the call.</param>
+      /// <returns>The call object.</returns>
+      public virtual grpc::AsyncDuplexStreamingCall<global::Lnrpc.SendToRouteRequest, global::Lnrpc.SendResponse> SendToRoute(grpc::Metadata headers = null, DateTime? deadline = null, CancellationToken cancellationToken = default(CancellationToken))
+      {
+        return SendToRoute(new grpc::CallOptions(headers, deadline, cancellationToken));
+      }
+      /// <summary>
+      ///* lncli: `sendtoroute`
+      ///SendToRoute is a bi-directional streaming RPC for sending payment through
+      ///the Lightning Network. This method differs from SendPayment in that it
+      ///allows users to specify a full route manually. This can be used for things
+      ///like rebalancing, and atomic swaps.
+      /// </summary>
+      /// <param name="options">The options for the call.</param>
+      /// <returns>The call object.</returns>
+      public virtual grpc::AsyncDuplexStreamingCall<global::Lnrpc.SendToRouteRequest, global::Lnrpc.SendResponse> SendToRoute(grpc::CallOptions options)
+      {
+        return CallInvoker.AsyncDuplexStreamingCall(__Method_SendToRoute, null, options);
+      }
+      /// <summary>
+      ///*
+      ///SendToRouteSync is a synchronous version of SendToRoute. It Will block
+      ///until the payment either fails or succeeds.
+      /// </summary>
+      /// <param name="request">The request to send to the server.</param>
+      /// <param name="headers">The initial metadata to send with the call. This parameter is optional.</param>
+      /// <param name="deadline">An optional deadline for the call. The call will be cancelled if deadline is hit.</param>
+      /// <param name="cancellationToken">An optional token for canceling the call.</param>
+      /// <returns>The response received from the server.</returns>
+      public virtual global::Lnrpc.SendResponse SendToRouteSync(global::Lnrpc.SendToRouteRequest request, grpc::Metadata headers = null, DateTime? deadline = null, CancellationToken cancellationToken = default(CancellationToken))
+      {
+        return SendToRouteSync(request, new grpc::CallOptions(headers, deadline, cancellationToken));
+      }
+      /// <summary>
+      ///*
+      ///SendToRouteSync is a synchronous version of SendToRoute. It Will block
+      ///until the payment either fails or succeeds.
+      /// </summary>
+      /// <param name="request">The request to send to the server.</param>
+      /// <param name="options">The options for the call.</param>
+      /// <returns>The response received from the server.</returns>
+      public virtual global::Lnrpc.SendResponse SendToRouteSync(global::Lnrpc.SendToRouteRequest request, grpc::CallOptions options)
+      {
+        return CallInvoker.BlockingUnaryCall(__Method_SendToRouteSync, null, options, request);
+      }
+      /// <summary>
+      ///*
+      ///SendToRouteSync is a synchronous version of SendToRoute. It Will block
+      ///until the payment either fails or succeeds.
+      /// </summary>
+      /// <param name="request">The request to send to the server.</param>
+      /// <param name="headers">The initial metadata to send with the call. This parameter is optional.</param>
+      /// <param name="deadline">An optional deadline for the call. The call will be cancelled if deadline is hit.</param>
+      /// <param name="cancellationToken">An optional token for canceling the call.</param>
+      /// <returns>The call object.</returns>
+      public virtual grpc::AsyncUnaryCall<global::Lnrpc.SendResponse> SendToRouteSyncAsync(global::Lnrpc.SendToRouteRequest request, grpc::Metadata headers = null, DateTime? deadline = null, CancellationToken cancellationToken = default(CancellationToken))
+      {
+        return SendToRouteSyncAsync(request, new grpc::CallOptions(headers, deadline, cancellationToken));
+      }
+      /// <summary>
+      ///*
+      ///SendToRouteSync is a synchronous version of SendToRoute. It Will block
+      ///until the payment either fails or succeeds.
+      /// </summary>
+      /// <param name="request">The request to send to the server.</param>
+      /// <param name="options">The options for the call.</param>
+      /// <returns>The call object.</returns>
+      public virtual grpc::AsyncUnaryCall<global::Lnrpc.SendResponse> SendToRouteSyncAsync(global::Lnrpc.SendToRouteRequest request, grpc::CallOptions options)
+      {
+        return CallInvoker.AsyncUnaryCall(__Method_SendToRouteSync, null, options, request);
+      }
+      /// <summary>
       ///* lncli: `addinvoice`
       ///AddInvoice attempts to add a new invoice to the invoice database. Any
       ///duplicated invoices are rejected, therefore all invoices *must* have a
@@ -2553,7 +2833,14 @@ namespace Lnrpc {
       /// <summary>
       ///*
       ///SubscribeInvoices returns a uni-directional stream (sever -> client) for
-      ///notifying the client of newly added/settled invoices.
+      ///notifying the client of newly added/settled invoices. The caller can
+      ///optionally specify the add_index and/or the settle_index. If the add_index
+      ///is specified, then we'll first start by sending add invoice events for all
+      ///invoices with an add_index greater than the specified value.  If the
+      ///settle_index is specified, the next, we'll send out all settle events for
+      ///invoices with a settle_index greater than the specified value.  One or both
+      ///of these fields can be set. If no fields are set, then we'll only send out
+      ///the latest add/settle events.
       /// </summary>
       /// <param name="request">The request to send to the server.</param>
       /// <param name="headers">The initial metadata to send with the call. This parameter is optional.</param>
@@ -2567,7 +2854,14 @@ namespace Lnrpc {
       /// <summary>
       ///*
       ///SubscribeInvoices returns a uni-directional stream (sever -> client) for
-      ///notifying the client of newly added/settled invoices.
+      ///notifying the client of newly added/settled invoices. The caller can
+      ///optionally specify the add_index and/or the settle_index. If the add_index
+      ///is specified, then we'll first start by sending add invoice events for all
+      ///invoices with an add_index greater than the specified value.  If the
+      ///settle_index is specified, the next, we'll send out all settle events for
+      ///invoices with a settle_index greater than the specified value.  One or both
+      ///of these fields can be set. If no fields are set, then we'll only send out
+      ///the latest add/settle events.
       /// </summary>
       /// <param name="request">The request to send to the server.</param>
       /// <param name="options">The options for the call.</param>
@@ -3386,11 +3680,14 @@ namespace Lnrpc {
           .AddMethod(__Method_GetInfo, serviceImpl.GetInfo)
           .AddMethod(__Method_PendingChannels, serviceImpl.PendingChannels)
           .AddMethod(__Method_ListChannels, serviceImpl.ListChannels)
+          .AddMethod(__Method_ClosedChannels, serviceImpl.ClosedChannels)
           .AddMethod(__Method_OpenChannelSync, serviceImpl.OpenChannelSync)
           .AddMethod(__Method_OpenChannel, serviceImpl.OpenChannel)
           .AddMethod(__Method_CloseChannel, serviceImpl.CloseChannel)
           .AddMethod(__Method_SendPayment, serviceImpl.SendPayment)
           .AddMethod(__Method_SendPaymentSync, serviceImpl.SendPaymentSync)
+          .AddMethod(__Method_SendToRoute, serviceImpl.SendToRoute)
+          .AddMethod(__Method_SendToRouteSync, serviceImpl.SendToRouteSync)
           .AddMethod(__Method_AddInvoice, serviceImpl.AddInvoice)
           .AddMethod(__Method_ListInvoices, serviceImpl.ListInvoices)
           .AddMethod(__Method_LookupInvoice, serviceImpl.LookupInvoice)
