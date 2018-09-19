@@ -68,14 +68,23 @@ namespace Donner
 
         public async Task<string[]> GenerateSeed(string aezeedPassphrase = default(string))
         {
-            walletRpcChannel = new Grpc.Core.Channel(HostName, new SslCredentials(Cert));
-            walletUnlocker = new WalletUnlocker.WalletUnlockerClient(walletRpcChannel);
-            await walletRpcChannel.ConnectAsync();
-            var genSeedRequest = new GenSeedRequest();
-            if (!string.IsNullOrEmpty(aezeedPassphrase))
-                genSeedRequest.AezeedPassphrase = ByteString.CopyFromUtf8(aezeedPassphrase);
-            var genSeedResponse = await walletUnlocker.GenSeedAsync(genSeedRequest);
-            walletRpcChannel.ShutdownAsync().Wait();
+            var genSeedResponse = new GenSeedResponse();
+            try
+            {
+                walletRpcChannel = new Grpc.Core.Channel(HostName, new SslCredentials(Cert));
+                walletUnlocker = new WalletUnlocker.WalletUnlockerClient(walletRpcChannel);
+                await walletRpcChannel.ConnectAsync();
+                var genSeedRequest = new GenSeedRequest();
+                if (!string.IsNullOrEmpty(aezeedPassphrase))
+                    genSeedRequest.AezeedPassphrase = ByteString.CopyFromUtf8(aezeedPassphrase);
+               genSeedResponse = await walletUnlocker.GenSeedAsync(genSeedRequest);
+                walletRpcChannel.ShutdownAsync().Wait();
+            } catch(RpcException e)
+            {
+               
+                walletRpcChannel.ShutdownAsync().Wait();
+                return new string[] { e.Status.Detail };
+            }
             return genSeedResponse.CipherSeedMnemonic.ToArray(); ;
         }
 
@@ -87,11 +96,13 @@ namespace Donner
             walletUnlocker = new WalletUnlocker.WalletUnlockerClient(walletRpcChannel);
             await walletRpcChannel.ConnectAsync();
 
-            var initWalletRequest = new InitWalletRequest();
-            initWalletRequest.WalletPassword = ByteString.CopyFromUtf8(walletPassword);
-            initWalletRequest.CipherSeedMnemonic.AddRange(mnemonic);
             try
             {
+
+                var initWalletRequest = new InitWalletRequest();
+                initWalletRequest.WalletPassword = ByteString.CopyFromUtf8(walletPassword);
+                initWalletRequest.CipherSeedMnemonic.AddRange(mnemonic);
+
                 var initWalletResponse = await walletUnlocker.InitWalletAsync(initWalletRequest);
                 walletRpcChannel.ShutdownAsync().Wait();
                 

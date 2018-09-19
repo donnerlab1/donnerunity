@@ -10,6 +10,8 @@ public class NeutrinoWallet : LndRpcBridge {
     LndConfig config;
     public NeutrinoTest lnd;
     public string[] seed;
+
+    public bool getInfoTrigger;
 	// Use this for initialization
 	async void Start () {
         config = new LndConfig()
@@ -34,11 +36,21 @@ public class NeutrinoWallet : LndRpcBridge {
 
         await ConnectToLndWithMacaroon(config.Hostname + ":" + config.Port, cert, mac);
         seed = await GenerateSeed();
-        await UnlockWallet("suchwowmuchhey", seed);
+        var s = await UnlockWallet("suchwowmuchhey", seed);
+        Debug.Log("s");
+
+        await ConnectToLndWithMacaroon(config.Hostname + ":" + config.Port, cert, mac);
+        var getinfo = await GetInfo();
+        Debug.Log(getinfo.IdentityPubkey);
     }
 	
 	// Update is called once per frame
-	void Update () {
-		
+	async void Update () {
+		if(getInfoTrigger)
+        {
+            getInfoTrigger = false;
+            var getinfo = await GetInfo();
+            Debug.Log(getinfo.ToString());
+        }
 	}
 }
