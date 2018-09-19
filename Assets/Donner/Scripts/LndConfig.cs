@@ -7,7 +7,7 @@ using UnityEngine;
 [Serializable]
 public class LndConfig {
 
-
+    public bool Neutrino;
     public string Hostname;
     public string Port;
     public string TlsFile;

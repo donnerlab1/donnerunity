@@ -4,9 +4,11 @@ using System.Collections.Generic;
 using UnityEngine;
 using Donner;
 using System.Threading.Tasks;
+using System;
 
 public class WeatherLndClient : LndRpcBridge {
 
+    public string confname;
     public string hostname;
     public string port;
     public string certFile;
@@ -23,29 +25,62 @@ public class WeatherLndClient : LndRpcBridge {
 
     // Use this for initialization
     async void Start () {
+        LndHelper.SetupEnvironmentVariables();
         if (readConfig)
         {
-            config = LndHelper.ReadConfigFile(Application.dataPath + "/Resources/donner.conf");
+            config = LndHelper.ReadConfigFile(Application.dataPath + "/Resources/"+confname);
         }
         else
         {
             config = new LndConfig { Hostname = hostname, Port = port, MacaroonFile = macaroonFile, TlsFile = certFile };
         }
-        LndHelper.SetupEnvironmentVariables();
-        cert = File.ReadAllText(Application.dataPath + "/Resources/" + config.TlsFile);
+        if(config.Neutrino)
+        {
+            var neutrino = gameObject.AddComponent<NeutrinoTest>() as NeutrinoTest;
+            neutrino.StartLnd(config);
+            NeutrinoUnlock();
+        }else
+        {
 
-        mac = LndHelper.ToHex(File.ReadAllBytes(Application.dataPath + "/Resources/" + config.MacaroonFile));
+            cert = File.ReadAllText(Application.dataPath + "/Resources/" + config.TlsFile);
+
+            mac = LndHelper.ToHex(File.ReadAllBytes(Application.dataPath + "/Resources/" + config.MacaroonFile));
+            await ConnectToLndWithMacaroon(config.Hostname + ":" + config.Port, cert, mac);
+            OnInvoiceSettled += new InvoiceSettledEventHandler(ChangeWeather);
+
+            SubscribeInvoices();
+
+            var getInfo = await GetInfo();
+            pubkey = getInfo.IdentityPubkey;
+        }
+        
+        
 
        
-        await ConnectToLndWithMacaroon(config.Hostname + ":" + config.Port, cert, mac);
-        OnInvoiceSettled += new InvoiceSettledEventHandler(ChangeWeather);
         
-        SubscribeInvoices();
-
-        var getInfo = await GetInfo();
-        pubkey = getInfo.IdentityPubkey;
     }
+    public async void NeutrinoUnlock()
+    {
+        cert = File.ReadAllText(Application.dataPath + "/Resources/" + config.TlsFile);
+        mac = "";
+        try
+        {
+            mac = LndHelper.ToHex(File.ReadAllBytes(Application.dataPath + "/Resources/" + config.MacaroonFile));
+        }
+        catch (Exception e)
+        {
+            UnityEngine.Debug.Log(e);
 
+        }
+        await ConnectToLndWithMacaroon(config.Hostname + ":" + config.Port, cert, mac);
+        var seed = await GenerateSeed();
+        var s = await UnlockWallet("suchwowmuchhey", seed);
+        Debug.Log("s");
+
+        await ConnectToLndWithMacaroon(config.Hostname + ":" + config.Port, cert, mac);
+        var getinfo = await GetInfo();
+        Debug.Log(getinfo.IdentityPubkey);
+    }
     void ChangeWeather(object sender, InvoiceSettledEventArgs e)
     {
         Debug.Log(e.Invoice.Memo);
