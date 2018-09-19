@@ -60,7 +60,7 @@ namespace Donner
 
             rpcChannel = new Grpc.Core.Channel(host, channelCreds);
             lndClient = new Lightning.LightningClient(rpcChannel);
-            InvokeRepeating("TryConnecting", 3, 5);
+            //InvokeRepeating("TryConnecting", 3, 5);
 
             return "connected";
         }

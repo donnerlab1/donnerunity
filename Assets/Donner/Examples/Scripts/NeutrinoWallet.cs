@@ -7,11 +7,15 @@ using System;
 
 public class NeutrinoWallet : LndRpcBridge {
 
-    LndConfig config;
+    public LndConfig config;
     public NeutrinoTest lnd;
     public string[] seed;
 
+    
     public bool getInfoTrigger;
+
+    public string cert;
+        public string mac;
 	// Use this for initialization
 	async void Start () {
         config = new LndConfig()
@@ -22,30 +26,41 @@ public class NeutrinoWallet : LndRpcBridge {
             TlsFile = "/Neutrino/neutrino.cert"
         };
 
-        string cert = File.ReadAllText(Application.dataPath + "/Resources/" + config.TlsFile);
-        string mac = "";
+        lnd.StartLnd(config);
+
+        try
+        {
+            cert = File.ReadAllText(Application.dataPath + "/Resources/" + config.TlsFile);
+
+        }
+        catch (Exception e)
+        {
+            cert = "";
+            UnityEngine.Debug.Log(e);
+
+        }
+        
         try
         {
             mac = LndHelper.ToHex(File.ReadAllBytes(Application.dataPath + "/Resources/" + config.MacaroonFile));
         } catch(Exception e)
         {
             UnityEngine.Debug.Log(e);
-            
+            mac = "";
         }
-        lnd.StartLnd(config);
-
         await ConnectToLndWithMacaroon(config.Hostname + ":" + config.Port, cert, mac);
-        seed = await GenerateSeed();
+        var seed = await GenerateSeed();
         var s = await UnlockWallet("suchwowmuchhey", seed);
-        Debug.Log("s");
+
 
         await ConnectToLndWithMacaroon(config.Hostname + ":" + config.Port, cert, mac);
         var getinfo = await GetInfo();
         Debug.Log(getinfo.IdentityPubkey);
     }
-	
-	// Update is called once per frame
-	async void Update () {
+
+
+    // Update is called once per frame
+    async void Update () {
 		if(getInfoTrigger)
         {
             getInfoTrigger = false;

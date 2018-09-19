@@ -75,7 +75,7 @@ public class WeatherLndClient : LndRpcBridge {
         await ConnectToLndWithMacaroon(config.Hostname + ":" + config.Port, cert, mac);
         var seed = await GenerateSeed();
         var s = await UnlockWallet("suchwowmuchhey", seed);
-        Debug.Log("s");
+
 
         await ConnectToLndWithMacaroon(config.Hostname + ":" + config.Port, cert, mac);
         var getinfo = await GetInfo();
