@@ -14,21 +14,16 @@ public class TwitchInvoiceHandler : MonoBehaviour {
     private TwitchIRC IRC;
     private string[] commandNames;
 
-    // Use this for initialization
     void Start () {
         EventDict = new Dictionary<string, EventInvoice>();
         activeInvoices = new Dictionary<string, EventInvoicePayload>();
         IRC = this.GetComponent<TwitchIRC>();
         IRC.messageRecievedEvent.AddListener(OnChatMsgReceived);
         EventDict.Add("message", new MessageEventInvoice());
+        EventDict.Add("donate", new DonationEventInvoice());
         lnd.OnInvoiceSettled += new InvoiceSettledEventHandler(HandlePaidInvoice);
     }
 	
-	// Update is called once per frame
-	void Update () {
-		
-	}
-
     async void OnChatMsgReceived(string msg)
     {
         int msgIndex = msg.IndexOf("PRIVMSG #");
@@ -38,13 +33,14 @@ public class TwitchInvoiceHandler : MonoBehaviour {
         string[] data = msgString.Split(' ');
         data = data.Slice(1, data.Length);
         var response = "";
+
         if (msgString == "!help")
         {
             response = "type !rain, !fire or !wind=X (x is integer amount)";
         }else if (EventDict.ContainsKey(command))
         {
             var invoice = await EventDict[command].CreateInvoice(lnd, user, data);
-            activeInvoices.Add(invoice, new EventInvoicePayload(command, data));
+            activeInvoices.Add(invoice, new EventInvoicePayload(command, user, data));
             response = invoice;
         }
         if (response != "")
@@ -60,22 +56,11 @@ public class TwitchInvoiceHandler : MonoBehaviour {
     {
         if(activeInvoices.ContainsKey(e.Invoice.PaymentRequest))
         {
-            EventDict[activeInvoices[e.Invoice.PaymentRequest].type].OnInvoicePaid(e.Invoice, activeInvoices[e.Invoice.PaymentRequest].data);
+            EventDict[activeInvoices[e.Invoice.PaymentRequest].type].OnInvoicePaid(e.Invoice, activeInvoices[e.Invoice.PaymentRequest].sender, activeInvoices[e.Invoice.PaymentRequest].data);
         }
     }
     
-    
-    bool invoicesContain(string msg)
-    {
-        foreach(var str in commandNames)
-        {
-            if (msg.Contains(str))
-                return true;
-        }
-        return false;
-    }
-
-    
+        
 }
 public static class Extensions
 {

@@ -9,7 +9,7 @@ using UnityEngine;
 public class MessageEventInvoice : EventInvoice {
 
     
-    public void OnInvoicePaid(Invoice invoice, string[] data)
+    public void OnInvoicePaid(Invoice invoice, string sender, string[] data)
     {
         Debug.Log(dataToMessage(data));
     }
