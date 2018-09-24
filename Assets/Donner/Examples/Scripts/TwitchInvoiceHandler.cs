@@ -2,13 +2,14 @@
 using System.Collections.Generic;
 using UnityEngine;
 using Donner;
+using UnityEngine.UI;
 
 [RequireComponent(typeof (TwitchIRC))]
 public class TwitchInvoiceHandler : MonoBehaviour {
 
 
     public DonnerLnd lnd;
-
+    public Text DonationNameText;
     Dictionary<string,EventInvoice> EventDict;
     Dictionary<string, EventInvoicePayload> activeInvoices;
     private TwitchIRC IRC;
@@ -20,7 +21,7 @@ public class TwitchInvoiceHandler : MonoBehaviour {
         IRC = this.GetComponent<TwitchIRC>();
         IRC.messageRecievedEvent.AddListener(OnChatMsgReceived);
         EventDict.Add("message", new MessageEventInvoice());
-        EventDict.Add("donate", new DonationEventInvoice());
+        EventDict.Add("donate", new DonationEventInvoice(DonationNameText));
         lnd.OnInvoiceSettled += new InvoiceSettledEventHandler(HandlePaidInvoice);
     }
 	
