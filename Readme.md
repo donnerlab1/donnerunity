@@ -7,11 +7,11 @@ DonnerUnity is a [Lightning](https://lightning.network/) based payment plugin fo
 
 | Service | fee | minimum amount | maximum amount | personal data required | trusted third party | 
 :---:|:---:|:---:|:---:|:---:|:---:
-**DonnerUnity** | 0% | $0.00008 * | $137 billion *|no | no
+**DonnerUnity** | 0% | $0.00006 * | $137 billion *|no | no
 **Steamworks** | 30% | $0.01 | $2000 in 24h |yes | yes
 **App Store** | 30% | $0.99 | $999.99 | yes  | yes
 
-*: assuming 8000$ USD/BTC
+*: assuming 6000$ USD/BTC
 
 
 ## Installation
