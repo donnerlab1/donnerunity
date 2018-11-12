@@ -4,10 +4,11 @@ using System.Collections.Generic;
 
 public class TwitchIRC : MonoBehaviour
 {
+    public bool genericIRC;
     public string oauth;
     public string nickName;
     public string channelName;
-    private string server = "irc.twitch.tv";
+    public string server = "irc.twitch.tv";
     private int port = 6667;
 
     //event(buffer).
@@ -19,7 +20,7 @@ public class TwitchIRC : MonoBehaviour
     private Queue<string> commandQueue = new Queue<string>();
     private List<string> recievedMsgs = new List<string>();
     private System.Threading.Thread inProc, outProc;
-    private void StartIRC()
+    public void StartIRC()
     {
         System.Net.Sockets.TcpClient sock = new System.Net.Sockets.TcpClient();
         sock.Connect(server, port);
@@ -32,10 +33,23 @@ public class TwitchIRC : MonoBehaviour
         var input = new System.IO.StreamReader(networkStream);
         var output = new System.IO.StreamWriter(networkStream);
 
-        //Send PASS & NICK.
-        output.WriteLine("PASS " + oauth);
-        output.WriteLine("NICK " + nickName.ToLower());
-        output.Flush();
+        if (genericIRC)
+        {
+            // output.WriteLine("PASS " + password);
+            output.WriteLine("NICK " + nickName.ToLower());
+            output.Flush();
+            string USER = "USER " + nickName + " 0 * :" + nickName;
+            output.WriteLine(USER);
+            output.Flush();
+
+        }
+        else
+        {
+            //Send PASS & NICK.
+            output.WriteLine("PASS " + oauth);
+            output.WriteLine("NICK " + nickName.ToLower());
+            output.Flush();
+        }
 
         //output proc
         outProc = new System.Threading.Thread(() => IRCOutputProcedure(output));
@@ -125,7 +139,7 @@ public class TwitchIRC : MonoBehaviour
     void OnEnable()
     {
         stopThreads = false;
-        StartIRC();
+       // StartIRC();
     }
     void OnDisable()
     {

@@ -513,9 +513,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 51b07732a3238bf4d8df5fbac5a25173, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  oauth: 
-  nickName: 
-  channelName: 
+  genericIRC: 0
+  oauth: oauth:gcpvqz24usws7gnl91bt9vzfm93syq
+  nickName: sputnck1
+  channelName: sputnck1
+  server: irc.twitch.tv
 --- !u!4 &539254827
 Transform:
   m_ObjectHideFlags: 0
@@ -874,6 +876,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f248d2f95a9bed246ba78392eb12be26, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  confname: donner
   hostname: localhost
   port: 10009
   certFile: tls.cert

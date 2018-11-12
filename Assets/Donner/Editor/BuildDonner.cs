@@ -3,6 +3,7 @@ using UnityEditor;
 using UnityEngine;
 using System.Diagnostics;
 using UnityEngine.SceneManagement;
+using System.IO;
 
 public class BuildDonner {
 
@@ -25,8 +26,7 @@ public class BuildDonner {
         FileUtil.CopyFileOrDirectory("Assets/Resources/tls.cert", path + "/DonnerGame_Data/Resources/tls.cert");
         FileUtil.CopyFileOrDirectory("Assets/Resources/admin.macaroon", path + "/DonnerGame_Data/Resources/admin.macaroon");
         FileUtil.CopyFileOrDirectory("Assets/Resources/donner.conf", path + "/DonnerGame_Data/Resources/donner.conf");
-        FileUtil.CopyFileOrDirectory("Assets/Donner/Plugins/grpc_csharp_ext.x86.dll", path + "/DonnerGame_Data/Managed/grpc_csharp_ext.x86.dll");
-        FileUtil.CopyFileOrDirectory("Assets/Donner/Plugins/grpc_csharp_ext.x64.dll", path + "/DonnerGame_Data/Managed/grpc_csharp_ext.x64.dll");
+        FileUtil.CopyFileOrDirectory("Assets/Donner/Plugins/", path + "/DonnerGame_Data/Managed/");
 
         
     }
@@ -42,14 +42,16 @@ public class BuildDonner {
         }
         
         // Build player.
-        BuildPipeline.BuildPlayer(levels, path + "/DonnerGame.exe", BuildTarget.StandaloneWindows, BuildOptions.None);
+        BuildPipeline.BuildPlayer(levels, path + "/DonnerGame.exe", BuildTarget.StandaloneWindows64, BuildOptions.Development);
 
         // Copy a file from the project folder to the build folder, alongside the built game.
-        FileUtil.CopyFileOrDirectory("Assets/Resources/tls.cert", path + "/DonnerGame_Data/Resources/tls.cert");
-        FileUtil.CopyFileOrDirectory("Assets/Resources/admin.macaroon", path + "/DonnerGame_Data/Resources/admin.macaroon");
-        FileUtil.CopyFileOrDirectory("Assets/Resources/donner.conf", path + "/DonnerGame_Data/Resources/donner.conf");
-        FileUtil.CopyFileOrDirectory("Assets/Donner/Plugins/grpc_csharp_ext.x86.dll", path + "/DonnerGame_Data/Managed/grpc_csharp_ext.x86.dll");
-        FileUtil.CopyFileOrDirectory("Assets/Donner/Plugins/grpc_csharp_ext.x64.dll", path + "/DonnerGame_Data/Managed/grpc_csharp_ext.x64.dll");
+        // FileUtil.CopyFileOrDirectory("Assets/Resources/tls.cert", path + "/DonnerGame_Data/Resources/tls.cert");
+        //FileUtil.CopyFileOrDirectory("Assets/Resources/admin.macaroon", path + "/DonnerGame_Data/Resources/admin.macaroon");
+        if(File.Exists(path + "/donnerdungeon.conf"))
+        FileUtil.DeleteFileOrDirectory(path + "/donnerdungeon.conf");
+
+        FileUtil.CopyFileOrDirectory("Assets/Resources/donnerdungeon.conf", path + "/donnerdungeon.conf");
+        FileUtil.CopyFileOrDirectory("Assets/Donner/Plugins/", path + "/DonnerGame_Data/Managed/");
 
 
     }
